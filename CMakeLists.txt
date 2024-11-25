@@ -34,6 +34,22 @@ if(ENABLE_QT)
                AUTORCC ON)
 endif()
 
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.c)
+include(cmake/BuildGRPCpp.cmake)
+include(cmake/FetchNlohmannJSON.cmake)
+
+# run protoc to generate the grpc files
+add_custom_command(
+    OUTPUT ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.pb.cc
+    COMMAND ${PROTOC_EXECUTABLE} --cpp_out=${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
+        --grpc_out=${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
+        --plugin=protoc-gen-grpc=${GRPC_PLUGIN_EXECUTABLE}
+        -I ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
+        ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.proto
+    DEPENDS ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.proto
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.c
+    src/cloud-providers/clova/clova-realtime.cpp
+    src/cloud-providers/clova/nest.pb.cc)
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
