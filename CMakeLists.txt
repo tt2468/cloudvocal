@@ -52,16 +52,17 @@ else()
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libcurl)
 endif()
 
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.c
-    src/cloudvocal.c
-    src/cloudvocal.cpp
-    src/cloudvocal-callbacks.cpp
-    src/cloudvocal-utils.cpp
-    src/cloudvocal-properties.cpp
-    src/cloud-providers/clova/clova-realtime.cpp
-    src/cloud-providers/clova/nest.pb.cc
-    src/cloud-providers/clova/nest.grpc.pb.cc
-    )
+target_sources(
+  ${CMAKE_PROJECT_NAME}
+  PRIVATE src/plugin-main.c
+          src/cloudvocal.c
+          src/cloudvocal.cpp
+          src/cloudvocal-callbacks.cpp
+          src/cloudvocal-utils.cpp
+          src/cloudvocal-properties.cpp
+          src/cloud-providers/clova/clova-realtime.cpp
+          src/cloud-providers/clova/nest.pb.cc
+          src/cloud-providers/clova/nest.grpc.pb.cc)
 
 add_subdirectory(src/cloud-translation)
 

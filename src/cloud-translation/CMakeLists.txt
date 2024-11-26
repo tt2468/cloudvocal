@@ -11,5 +11,4 @@ target_sources(
           ${CMAKE_CURRENT_SOURCE_DIR}/language-codes.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/openai.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/papago.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/translation-cloud.cpp
-          )
+          ${CMAKE_CURRENT_SOURCE_DIR}/translation-cloud.cpp)
