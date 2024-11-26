@@ -12,8 +12,6 @@
 #include <Windows.h>
 #endif
 
-#include <QString>
-
 #include "plugin-support.h"
 #include "cloudvocal.h"
 #include "cloudvocal-data.h"
@@ -120,7 +118,7 @@ void cloudvocal_destroy(void *data)
 	signal_handler_disconnect(sh_filter, "enable", enable_callback, gf);
 
 	obs_log(gf->log_level, "filter destroy");
-	shutdown_whisper_thread(gf);
+	// shutdown_transcription_thread(gf);
 
 	if (gf->resampler) {
 		audio_resampler_destroy(gf->resampler);
@@ -144,7 +142,6 @@ void cloudvocal_update(void *data, obs_data_t *s)
 	obs_log(gf->log_level, "cloudvocal filter update");
 
 	gf->log_level = (int)obs_data_get_int(s, "log_level");
-	gf->vad_mode = (int)obs_data_get_int(s, "vad_mode");
 	gf->log_words = obs_data_get_bool(s, "log_words");
 	gf->caption_to_stream = obs_data_get_bool(s, "caption_to_stream");
 	gf->save_to_file = obs_data_get_bool(s, "file_output_enable");
@@ -163,7 +160,7 @@ void cloudvocal_update(void *data, obs_data_t *s)
 	if (filter_words_replace != nullptr && strlen(filter_words_replace) > 0) {
 		obs_log(gf->log_level, "filter_words_replace: %s", filter_words_replace);
 		// deserialize the filter words replace
-		gf->filter_words_replace = deserialize_filter_words_replace(filter_words_replace);
+		// gf->filter_words_replace = deserialize_filter_words_replace(filter_words_replace);
 	} else {
 		// clear the filter words replace
 		gf->filter_words_replace.clear();
@@ -192,12 +189,11 @@ void cloudvocal_update(void *data, obs_data_t *s)
 		gf->translate = false;
 	}
 
-	gf->translate_cloud = obs_data_get_bool(s, "translate_cloud");
+	gf->translate = obs_data_get_bool(s, "translate_cloud");
 	gf->translate_cloud_config.provider = obs_data_get_string(s, "translate_cloud_provider");
-	gf->translate_cloud_target_language =
-		obs_data_get_string(s, "translate_cloud_target_language");
-	gf->translate_cloud_output = obs_data_get_string(s, "translate_cloud_output");
-	gf->translate_cloud_only_full_sentences =
+	gf->target_lang = obs_data_get_string(s, "translate_cloud_target_language");
+	gf->translation_output = obs_data_get_string(s, "translate_cloud_output");
+	gf->translate_only_full_sentences =
 		obs_data_get_bool(s, "translate_cloud_only_full_sentences");
 	gf->translate_cloud_config.access_key = obs_data_get_string(s, "translate_cloud_api_key");
 	gf->translate_cloud_config.secret_key =

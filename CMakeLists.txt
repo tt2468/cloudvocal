@@ -35,23 +35,34 @@ if(ENABLE_QT)
 endif()
 
 include(cmake/BuildGRPCpp.cmake)
+include(cmake/BuildClovaAPIs.cmake)
+include(cmake/BuildGoogleAPIs.cmake)
 include(cmake/FetchNlohmannJSON.cmake)
 
-# run protoc to generate the grpc files
-add_custom_command(
-    OUTPUT ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.pb.cc
-    COMMAND ${PROTOC_EXECUTABLE} --cpp_out=${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
-        --grpc_out=${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
-        --plugin=protoc-gen-grpc=${GRPC_PLUGIN_EXECUTABLE}
-        -I ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova
-        ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.proto
-    DEPENDS ${CMAKE_SOURCE_DIR}/src/cloud-providers/clova/nest.proto
-)
+set(USE_SYSTEM_CURL
+    OFF
+    CACHE STRING "Use system cURL")
+
+if(USE_SYSTEM_CURL)
+  find_package(CURL REQUIRED)
+  target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE "${CURL_LIBRARIES}")
+  target_include_directories(${CMAKE_PROJECT_NAME} SYSTEM PUBLIC "${CURL_INCLUDE_DIRS}")
+else()
+  include(cmake/BuildMyCurl.cmake)
+  target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libcurl)
+endif()
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.c
+    src/cloudvocal.c
+    src/cloudvocal.cpp
+    src/cloudvocal-callbacks.cpp
+    src/cloudvocal-utils.cpp
+    src/cloudvocal-properties.cpp
     src/cloud-providers/clova/clova-realtime.cpp
     src/cloud-providers/clova/nest.pb.cc
     src/cloud-providers/clova/nest.grpc.pb.cc
     )
+
+add_subdirectory(src/cloud-translation)
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})

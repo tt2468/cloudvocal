@@ -20,7 +20,7 @@ void cloudvocal_show(void *data);
 void cloudvocal_hide(void *data);
 
 const char *const PLUGIN_INFO_TEMPLATE =
-	"<a href=\"https://github.com/locaal-ai/obs-localvocal/\">LocalVocal</a> (%1) by "
+	"<a href=\"https://github.com/locaal-ai/obs-localvocal/\">LocalVocal</a> ({{plugin_version}}) by "
 	"<a href=\"https://github.com/locaal-ai\">Locaal AI</a> ❤️ "
 	"<a href=\"https://locaal.ai\">Support & Follow</a>";
 

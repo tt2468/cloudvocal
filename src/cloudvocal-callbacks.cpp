@@ -17,6 +17,7 @@
 #include <functional>
 
 #include "cloudvocal-callbacks.h"
+#include "cloudvocal-utils.h"
 #include "plugin-support.h"
 
 void send_caption_to_source(const std::string &target_source_name, const std::string &caption,
@@ -58,18 +59,16 @@ void send_sentence_to_cloud_translation_async(const std::string &sentence,
 		if (gf->translate && !sentence.empty()) {
 			obs_log(gf->log_level, "Translating text with cloud provider %s. %s -> %s",
 				gf->translate_cloud_config.provider.c_str(),
-				source_language.c_str(),
-				gf->translate_cloud_target_language.c_str());
+				source_language.c_str(), gf->target_lang.c_str());
 			std::string translated_text;
 			if (sentence == last_text) {
 				// do not translate the same sentence twice
-				callback(gf->last_text_cloud_translation);
+				callback(gf->last_text_translation);
 				return;
 			}
 
 			translated_text = translate_cloud(gf->translate_cloud_config, sentence,
-							  gf->translate_cloud_target_language,
-							  source_language);
+							  gf->target_lang, source_language);
 			if (!translated_text.empty()) {
 				if (gf->log_words) {
 					obs_log(LOG_INFO, "Cloud Translation: '%s' -> '%s'",

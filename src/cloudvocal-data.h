@@ -7,6 +7,10 @@
 #include <obs-module.h>
 #include <media-io/audio-resampler.h>
 
+#include "cloud-translation/translation-cloud.h"
+
+#define TRANSCRIPTION_SAMPLE_RATE 16000
+
 // Audio packet info
 struct cloudvocal_audio_info {
 	uint32_t frames;
@@ -20,7 +24,7 @@ struct cloudvocal_data {
 	bool source_signals_set;
 	obs_source_t *context;
 
-	int channels;
+	size_t channels;
 	int sample_rate;
 	std::deque<float> input_buffers[8];
 	std::deque<cloudvocal_audio_info> info_buffer;
@@ -45,6 +49,9 @@ struct cloudvocal_data {
 	bool cleared_last_sub;
 	std::string last_transcription_sentence;
 	audio_resampler_t *resampler;
+	int min_sub_duration;
+	int max_sub_duration;
+	bool log_words;
 
 	std::map<std::string, std::string> filter_words_replace;
 
@@ -55,6 +62,7 @@ struct cloudvocal_data {
 	std::string target_lang;
 	std::string last_text_for_translation;
 	std::string last_text_translation;
+	CloudTranslatorConfig translate_cloud_config;
 
 	std::mutex input_buffers_mutex;
 	std::condition_variable input_buffers_cv;
