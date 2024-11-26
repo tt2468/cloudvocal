@@ -50,6 +50,8 @@ add_custom_command(
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.c
     src/cloud-providers/clova/clova-realtime.cpp
-    src/cloud-providers/clova/nest.pb.cc)
+    src/cloud-providers/clova/nest.pb.cc
+    src/cloud-providers/clova/nest.grpc.pb.cc
+    )
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})

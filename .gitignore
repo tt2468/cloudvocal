@@ -24,3 +24,7 @@
 
 # Exclude CMake build number cache
 /cmake/.CMakeBuildNumber
+
+# protobuf generated files
+*.pb.cc
+*.pb.h
