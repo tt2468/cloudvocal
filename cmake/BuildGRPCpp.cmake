@@ -22,7 +22,7 @@ if(WIN32)
   set(GRPC_LIBRARIES
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")
-else()
+elseif(UNIX AND NOT APPLE)
   # ensure the grpc enviroment variables (GRPC_SOURCE_DIR, GRPC_BUILD_DIR) are set
   if(NOT DEFINED ENV{GRPC_SOURCE_DIR} OR NOT DEFINED ENV{GRPC_BUILD_DIR})
     message(FATAL_ERROR "GRPC_SOURCE_DIR and GRPC_BUILD_DIR environment variables not set")
@@ -55,6 +55,12 @@ else()
   set(GRPC_LIBRARIES
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")
+else()
+  # find grpc through homebrew
+  find_program(PROTOC_EXECUTABLE NAMES protoc REQUIRED)
+  find_program(GRPC_PLUGIN_EXECUTABLE NAMES grpc_cpp_plugin REQUIRED)
+  find_path(GRPC_INCLUDE_DIR NAMES grpc/grpc.h)
+  find_library(GRPC_LIBRARIES NAMES grpc)
 endif()
 
 message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")
