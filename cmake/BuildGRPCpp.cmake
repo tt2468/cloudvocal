@@ -23,56 +23,20 @@ if(WIN32)
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")
 else()
-  include(ExternalProject)
-
-  message(STATUS "Building gRPC from source")
-
-  # Enable ccache if available
-  find_program(CCACHE_PROGRAM ccache)
-  if(CCACHE_PROGRAM)
-    message(STATUS "ccache found: ${CCACHE_PROGRAM}")
-    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+  # ensure the grpc enviroment variables (GRPC_SOURCE_DIR, GRPC_BUILD_DIR) are set
+  if(NOT DEFINED ENV{GRPC_SOURCE_DIR} OR NOT DEFINED ENV{GRPC_BUILD_DIR})
+    message(FATAL_ERROR "GRPC_SOURCE_DIR and GRPC_BUILD_DIR environment variables not set")
   endif()
-
-  set(EXTRA_CMAKE_ARGS "")
-  set(EXTRA_CMAKE_BUILD_ARGS "")
-
-  # Define the external project for gRPC
-  ExternalProject_Add(
-    grpc
-    GIT_REPOSITORY https://github.com/grpc/grpc.git
-    GIT_TAG ${GRPC_VERSION}
-    GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-    GIT_SUBMODULES_RECURSE ON
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND "bazel build @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin"
-    INSTALL_COMMAND ""
-    BUILD_BYPRODUCTS <SOURCE_DIR>/bazel-bin/external/com_google_protobuf/protoc
-                     <SOURCE_DIR>/bazel-bin/src/compiler/grpc_cpp_plugin
-    BUILD_IN_SOURCE TRUE
-    LOG_DOWNLOAD ON
-    LOG_CONFIGURE ON
-    LOG_BUILD ON
-    LOG_INSTALL ON)
-
-  # Specify include directories and link libraries for your project
-  ExternalProject_Get_Property(grpc SOURCE_DIR)
-  set(GRPC_INCLUDE_DIR ${SOURCE_DIR}/include)
-  set(GRPC_LIB_DIR ${SOURCE_DIR}/bazel-bin)
-
-  add_dependencies(${CMAKE_PROJECT_NAME} grpc)
 
   # make sure the protoc and grpc_cpp_plugin are found
   find_program(
     PROTOC_EXECUTABLE
     NAMES protoc
-    PATHS $${SOURCE_DIR}/bazel-bin/external/com_google_protobuf/)
+    PATHS $ENV{GRPC_BUILD_DIR}/external/com_google_protobuf/)
   find_program(
     GRPC_PLUGIN_EXECUTABLE
     NAMES grpc_cpp_plugin
-    PATHS ${SOURCE_DIR}/bazel-bin/src/compiler/)
+    PATHS $ENV{GRPC_BUILD_DIR}/src/compiler/)
 
   if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
     message(STATUS "protoc: ${PROTOC_EXECUTABLE}")
@@ -80,8 +44,14 @@ else()
     message(FATAL_ERROR "protoc or grpc_cpp_plugin not found")
   endif()
 
+  # make sure the grpc include dir is found
+  set(GRPC_INCLUDE_DIR $ENV{GRPC_SOURCE_DIR})
+  if(NOT EXISTS ${GRPC_INCLUDE_DIR})
+    message(FATAL_ERROR "gRPC include directory not found")
+  endif()
+
   # get all .a files in the lib directory
-  file(GLOB GRPC_LIBRARIES ${GRPC_LIB_DIR}/*.a)
+  file(GLOB GRPC_LIBRARIES "$ENV{GRPC_BUILD_DIR}/*.a")
   set(GRPC_LIBRARIES
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")

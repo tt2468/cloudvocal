@@ -44,9 +44,9 @@ runs:
         cd grpc
         git submodule update --init
         bazel build --compilation_mode=opt @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
-        # put the protoc and grpc_cpp_plugin paths in $GITHUB_ENV
-        echo "PROTOC_PATH=$(bazel info output_base)/external/com_google_protobuf/protoc" >> $GITHUB_ENV
-        echo "GRPC_CPP_PLUGIN_PATH=$(bazel info output_base)/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin" >> $GITHUB_ENV
+        # put grpc paths in $GITHUB_ENV
+        echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
+        echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
         echo ::endgroup::
 
     - name: Run macOS Build
