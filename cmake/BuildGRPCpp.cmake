@@ -48,8 +48,11 @@ else()
     GIT_PROGRESS TRUE
     GIT_SUBMODULES_RECURSE ON
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND bazel build @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
+    BUILD_COMMAND "bazel build @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin"
     INSTALL_COMMAND ""
+    BUILD_BYPRODUCTS <SOURCE_DIR>/bazel-bin/external/com_google_protobuf/protoc
+                     <SOURCE_DIR>/bazel-bin/src/compiler/grpc_cpp_plugin
+    BUILD_IN_SOURCE TRUE
     LOG_DOWNLOAD ON
     LOG_CONFIGURE ON
     LOG_BUILD ON
@@ -61,6 +64,8 @@ else()
   set(GRPC_LIB_DIR ${grpc_SOURCE_DIR}/bazel-bin)
   set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/external/com_google_protobuf/protoc)
   set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/src/compiler/grpc_cpp_plugin)
+
+  add_dependencies(${CMAKE_PROJECT_NAME} grpc)
 
   # make sure the protoc and grpc_cpp_plugin are found
   find_program(
