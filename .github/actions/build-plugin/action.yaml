@@ -23,23 +23,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Run macOS Build
-      if: runner.os == 'macOS'
-      shell: zsh --no-rcs --errexit --pipefail {0}
-      working-directory: ${{ inputs.workingDirectory }}
-      env:
-        CODESIGN_IDENT: ${{ inputs.codesignIdent }}
-        CODESIGN_TEAM: ${{ inputs.codesignTeam }}
-      run: |
-        : Run macOS Build
-
-        local -a build_args=(--config ${{ inputs.config }})
-        if (( ${+RUNNER_DEBUG} )) build_args+=(--debug)
-
-        if [[ '${{ inputs.codesign }}' == 'true' ]] build_args+=(--codesign)
-
-        .github/scripts/build-macos ${build_args}
-
     - name: Install Dependencies 🛍️
       if: runner.os == 'Linux'
       shell: bash
@@ -60,11 +43,28 @@ runs:
         git clone https://github.com/grpc/grpc.git --depth 1
         cd grpc
         git submodule update --init
-        bazel build @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
+        bazel build --compilation_mode=opt @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         # put the protoc and grpc_cpp_plugin paths in $GITHUB_ENV
         echo "PROTOC_PATH=$(bazel info output_base)/external/com_google_protobuf/protoc" >> $GITHUB_ENV
         echo "GRPC_CPP_PLUGIN_PATH=$(bazel info output_base)/external/com_github_grpc_grpc/src/compiler/grpc_cpp_plugin" >> $GITHUB_ENV
         echo ::endgroup::
+
+    - name: Run macOS Build
+      if: runner.os == 'macOS'
+      shell: zsh --no-rcs --errexit --pipefail {0}
+      working-directory: ${{ inputs.workingDirectory }}
+      env:
+        CODESIGN_IDENT: ${{ inputs.codesignIdent }}
+        CODESIGN_TEAM: ${{ inputs.codesignTeam }}
+      run: |
+        : Run macOS Build
+
+        local -a build_args=(--config ${{ inputs.config }})
+        if (( ${+RUNNER_DEBUG} )) build_args+=(--debug)
+
+        if [[ '${{ inputs.codesign }}' == 'true' ]] build_args+=(--codesign)
+
+        .github/scripts/build-macos ${build_args}
 
     - name: Run Ubuntu Build
       if: runner.os == 'Linux'
