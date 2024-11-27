@@ -46,20 +46,10 @@ else()
     GIT_TAG ${GRPC_VERSION}
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
-    CMAKE_GENERATOR ${CMAKE_GENERATOR}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-               -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-               -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF
-               -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF
-               -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=OFF
-               -DgRPC_BUILD_GRPC_PHP_PLUGIN=OFF
-               -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=OFF
-               -DgRPC_BUILD_GRPC_RUBY_PLUGIN=OFF
-               -DgRPC_INSTALL=ON
-               -DgRPC_BUILD_TESTS=OFF
-               ${EXTRA_CMAKE_ARGS}
-    BUILD_COMMAND ${CMAKE_COMMAND} --build . --config Release ${EXTRA_CMAKE_BUILD_ARGS}
-    INSTALL_COMMAND ${CMAKE_COMMAND} --install <INSTALL_DIR> --config ${CMAKE_BUILD_TYPE}
+    GIT_SUBMODULES_RECURSE ON
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND bazel build @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
+    INSTALL_COMMAND ""
     LOG_DOWNLOAD ON
     LOG_CONFIGURE ON
     LOG_BUILD ON
@@ -67,10 +57,10 @@ else()
 
   # Specify include directories and link libraries for your project
   ExternalProject_Get_Property(grpc install_dir)
-  set(GRPC_INCLUDE_DIR ${install_dir}/include)
-  set(GRPC_LIB_DIR ${install_dir}/lib)
-  set(PROTOC_EXECUTABLE ${install_dir}/bin/protoc)
-  set(GRPC_PLUGIN_EXECUTABLE ${install_dir}/bin/grpc_cpp_plugin)
+  set(GRPC_INCLUDE_DIR ${CMAKE_BINARY_DIR}/bazel-out/include)
+  set(GRPC_LIB_DIR ${CMAKE_BINARY_DIR}/bazel-out/lib)
+  set(PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bazel-out/bin/protoc)
+  set(GRPC_PLUGIN_EXECUTABLE ${CMAKE_BINARY_DIR}/bazel-out/bin/grpc_cpp_plugin)
 
   # get all .a files in the lib directory
   file(GLOB GRPC_LIBRARIES ${GRPC_LIB_DIR}/*.a)
