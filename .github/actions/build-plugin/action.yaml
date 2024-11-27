@@ -33,6 +33,12 @@ runs:
         echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
         brew install --quiet zsh
         echo ::endgroup::
+        
+    - name: Mount bazel cache
+      uses: actions/cache@v3
+      with:
+        path: "/home/runner/.cache/bazel"
+        key: bazel
 
     - name: Build gRPC 🛠️
       if: runner.os == 'Linux' || runner.os == 'macOS'
@@ -40,13 +46,10 @@ runs:
       run: |
         : Build gRPC 🛠️
         echo ::group::Build gRPC
-        sudo apt-get install -y ccache gcc g++ || brew install ccache
         git clone https://github.com/grpc/grpc.git --depth 1
         cd grpc
         git submodule update --init
         bazel build --compilation_mode=opt --build_tag_filters="-protos" \
-          --repo_env=CC="$(if [[ "$RUNNER_OS" == "Linux" ]]; then echo /usr/bin/ccache /usr/bin/gcc; else echo ccache clang; fi)" \
-          --repo_env=CXX="$(if [[ "$RUNNER_OS" == "Linux" ]]; then echo /usr/bin/ccache /usr/bin/g++; else echo ccache clang++; fi)" \
           @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
         echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
