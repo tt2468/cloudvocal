@@ -33,12 +33,6 @@ runs:
         echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
         brew install --quiet zsh
         echo ::endgroup::
-        
-    - name: Mount bazel cache
-      uses: actions/cache@v3
-      with:
-        path: "/home/runner/.cache/bazel"
-        key: bazel
 
     - name: Build gRPC 🛠️
       if: runner.os == 'Linux' || runner.os == 'macOS'
@@ -54,7 +48,12 @@ runs:
         echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
         echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
         # verify protoc
-        bazel-bin/external/com_google_protobuf/protoc --version
+        $(bazel info output_base)/external/com_google_protobuf/protoc --version
+        ls $(bazel info output_base)/external/com_google_protobuf/protoc
+        echo "protoc found at: $(bazel info output_base)/external/com_google_protobuf/protoc"
+        # verify grpc_cpp_plugin
+        ls $(bazel info output_base)/src/compiler/grpc_cpp_plugin
+        echo "grpc_cpp_plugin found at: $(bazel info output_base)/src/compiler/grpc_cpp_plugin"
         echo ::endgroup::
 
     - name: Run macOS Build

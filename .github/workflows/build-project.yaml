@@ -116,6 +116,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ccache-
 
+      - uses: actions/cache@v4
+        id: bazel-cache
+        with:
+          path: /Users/runner/.cache/bazel
+          key: ${{ runner.os }}-bazel-x86_64-${{ needs.check-event.outputs.config }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-x86_64-
+
       - name: Set Up Codesigning 🔑
         uses: ./.github/actions/setup-macos-codesigning
         if: fromJSON(needs.check-event.outputs.codesign)
@@ -197,6 +205,14 @@ jobs:
           key: ${{ runner.os }}-ccache-x86_64-${{ needs.check-event.outputs.config }}
           restore-keys: |
             ${{ runner.os }}-ccache-x86_64-
+
+      - uses: actions/cache@v4
+        id: bazel-cache
+        with:
+          path: /home/runner/.cache/bazel
+          key: ${{ runner.os }}-bazel-x86_64-${{ needs.check-event.outputs.config }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-x86_64-
 
       - name: Set up Homebrew 🍺
         uses: Homebrew/actions/setup-homebrew@master
