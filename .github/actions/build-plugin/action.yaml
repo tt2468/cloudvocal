@@ -40,7 +40,7 @@ runs:
       run: |
         : Build gRPC 🛠️
         echo ::group::Build gRPC
-        sudo apt-get install -y ccache || brew install ccache
+        sudo apt-get install -y ccache gcc g++ || brew install ccache
         git clone https://github.com/grpc/grpc.git --depth 1
         cd grpc
         git submodule update --init
@@ -50,6 +50,8 @@ runs:
           @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
         echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
+        # verify protoc
+        bazel-bin/external/com_google_protobuf/protoc --version
         echo ::endgroup::
 
     - name: Run macOS Build
