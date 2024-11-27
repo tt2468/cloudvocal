@@ -24,19 +24,19 @@ if(WIN32)
       CACHE STRING "gRPC libraries")
 elseif(UNIX AND NOT APPLE)
   # ensure the grpc enviroment variables (GRPC_SOURCE_DIR, GRPC_BUILD_DIR) are set
-  if(NOT DEFINED ENV{GRPC_SOURCE_DIR} OR NOT DEFINED ENV{GRPC_BUILD_DIR})
-    message(FATAL_ERROR "GRPC_SOURCE_DIR and GRPC_BUILD_DIR environment variables not set")
+  if(NOT DEFINED ENV{PROTOC_EXECUTABLE} OR NOT DEFINED ENV{GRPC_PLUGIN_EXECUTABLE})
+    message(FATAL_ERROR "PROTOC_EXECUTABLE and GRPC_PLUGIN_EXECUTABLE environment variables not set")
   endif()
 
   # make sure the protoc and grpc_cpp_plugin are found
   find_program(
     PROTOC_EXECUTABLE
     NAMES protoc
-    PATHS $ENV{GRPC_BUILD_DIR}/external/com_google_protobuf/)
+    PATHS $ENV{PROTOC_EXECUTABLE} REQUIRED)
   find_program(
     GRPC_PLUGIN_EXECUTABLE
     NAMES grpc_cpp_plugin
-    PATHS $ENV{GRPC_BUILD_DIR}/src/compiler/)
+    PATHS $ENV{GRPC_PLUGIN_EXECUTABLE} REQUIRED)
 
   if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
     message(STATUS "protoc: ${PROTOC_EXECUTABLE}")
@@ -44,17 +44,11 @@ elseif(UNIX AND NOT APPLE)
     message(FATAL_ERROR "protoc or grpc_cpp_plugin not found")
   endif()
 
-  # make sure the grpc include dir is found
-  set(GRPC_INCLUDE_DIR $ENV{GRPC_SOURCE_DIR})
-  if(NOT EXISTS ${GRPC_INCLUDE_DIR})
-    message(FATAL_ERROR "gRPC include directory not found")
-  endif()
+  # # make sure the grpc include dir is found set(GRPC_INCLUDE_DIR $ENV{GRPC_SOURCE_DIR}) if(NOT EXISTS
+  # ${GRPC_INCLUDE_DIR}) message(FATAL_ERROR "gRPC include directory not found") endif()
 
-  # get all .a files in the lib directory
-  file(GLOB GRPC_LIBRARIES "$ENV{GRPC_BUILD_DIR}/*.a")
-  set(GRPC_LIBRARIES
-      ${GRPC_LIBRARIES}
-      CACHE STRING "gRPC libraries")
+  # # get all .a files in the lib directory file(GLOB GRPC_LIBRARIES "$ENV{GRPC_BUILD_DIR}/*.a") set(GRPC_LIBRARIES
+  # ${GRPC_LIBRARIES} CACHE STRING "gRPC libraries")
 else()
   # find grpc through homebrew
   find_program(PROTOC_EXECUTABLE NAMES protoc REQUIRED)
