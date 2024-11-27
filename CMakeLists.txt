@@ -62,6 +62,7 @@ target_sources(
           src/cloudvocal-processing.cpp
           src/cloudvocal-properties.cpp
           src/cloud-providers/clova/clova-realtime.cpp
+          src/cloud-providers/clova/clova-provider.cpp
           src/cloud-providers/clova/nest.pb.cc
           src/cloud-providers/clova/nest.grpc.pb.cc)
 

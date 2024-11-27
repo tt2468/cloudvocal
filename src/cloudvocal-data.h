@@ -17,6 +17,8 @@ struct cloudvocal_audio_info {
 	uint64_t timestamp_offset_ns; // offset (since start of processing) timestamp in ns
 };
 
+class CloudProvider;
+
 struct cloudvocal_data {
 	int log_level;
 	bool active;
@@ -53,6 +55,8 @@ struct cloudvocal_data {
 	int min_sub_duration;
 	int max_sub_duration;
 	bool log_words;
+	// smart pointer to the cloud provider
+	std::shared_ptr<CloudProvider> cloud_provider;
 
 	std::map<std::string, std::string> filter_words_replace;
 
@@ -67,4 +71,5 @@ struct cloudvocal_data {
 
 	std::mutex input_buffers_mutex;
 	std::condition_variable input_buffers_cv;
+	std::mutex resampled_buffer_mutex;
 };

@@ -306,6 +306,16 @@ void add_general_group_properties(obs_properties_t *ppts)
 	obs_properties_add_group(ppts, "general_group", MT_("general_group"), OBS_GROUP_NORMAL,
 				 general_group);
 
+	// add selection for transcription cloud provider
+	obs_property_t *transcription_cloud_provider_select_list = obs_properties_add_list(
+		general_group, "transcription_cloud_provider", MT_("transcription_cloud_provider"),
+		OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+	// add the available cloud providers: Clova and Google
+	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Clova"),
+				     "clova");
+	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
+				     "google");
+
 	obs_property_t *subs_output =
 		obs_properties_add_list(general_group, "subtitle_sources", MT_("subtitle_sources"),
 					OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
@@ -315,12 +325,12 @@ void add_general_group_properties(obs_properties_t *ppts)
 	obs_enum_sources(add_sources_to_list, subs_output);
 
 	// Add language selector
-	obs_property_t *whisper_language_select_list =
-		obs_properties_add_list(general_group, "whisper_language_select", MT_("language"),
-					OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
+	obs_property_t *transcription_language_select_list = obs_properties_add_list(
+		general_group, "transcription_language_select", MT_("language"),
+		OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
 	// iterate over all available languages and add them to the list
 	for (auto const &pair : language_codes_reverse) {
-		obs_property_list_add_string(whisper_language_select_list, pair.first.c_str(),
+		obs_property_list_add_string(transcription_language_select_list, pair.first.c_str(),
 					     pair.second.c_str());
 	}
 }
@@ -386,7 +396,7 @@ void cloudvocal_defaults(obs_data_t *s)
 	obs_data_set_default_bool(s, "log_words", false);
 	obs_data_set_default_bool(s, "caption_to_stream", false);
 	obs_data_set_default_string(s, "whisper_model_path", "Whisper Tiny English (74Mb)");
-	obs_data_set_default_string(s, "whisper_language_select", "en");
+	obs_data_set_default_string(s, "transcription_language_select", "en");
 	obs_data_set_default_string(s, "subtitle_sources", "none");
 	obs_data_set_default_bool(s, "process_while_muted", false);
 	obs_data_set_default_bool(s, "subtitle_save_srt", false);

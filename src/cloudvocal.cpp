@@ -217,8 +217,9 @@ void cloudvocal_update(void *data, obs_data_t *s)
 		gf->text_source_name = new_text_source_name;
 	}
 
-	const char *whisper_language_select = obs_data_get_string(s, "whisper_language_select");
-	gf->language = whisper_language_select;
+	const char *transcription_language_select =
+		obs_data_get_string(s, "transcription_language_select");
+	gf->language = transcription_language_select;
 
 	if (gf->context != nullptr && (obs_source_enabled(gf->context) || gf->initial_creation)) {
 		if (gf->initial_creation) {

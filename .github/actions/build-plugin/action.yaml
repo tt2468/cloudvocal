@@ -47,6 +47,12 @@ runs:
           @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
         echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
+        
+        # find protoc
+        find $(bazel info output_base) -name protoc
+        # find grpc_cpp_plugin
+        find $(bazel info output_base) -name grpc_cpp_plugin
+
         # verify protoc
         $(bazel info output_base)/external/com_google_protobuf/protoc --version
         ls $(bazel info output_base)/external/com_google_protobuf/protoc
