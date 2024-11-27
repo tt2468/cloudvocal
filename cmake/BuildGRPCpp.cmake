@@ -56,11 +56,27 @@ else()
     LOG_INSTALL ON)
 
   # Specify include directories and link libraries for your project
-  ExternalProject_Get_Property(grpc install_dir)
-  set(GRPC_INCLUDE_DIR ${CMAKE_BINARY_DIR}/bazel-out/include)
-  set(GRPC_LIB_DIR ${CMAKE_BINARY_DIR}/bazel-out/lib)
-  set(PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bazel-out/bin/protoc)
-  set(GRPC_PLUGIN_EXECUTABLE ${CMAKE_BINARY_DIR}/bazel-out/bin/grpc_cpp_plugin)
+  ExternalProject_Get_Property(grpc source_dir)
+  set(GRPC_INCLUDE_DIR ${grpc_SOURCE_DIR}/include)
+  set(GRPC_LIB_DIR ${grpc_SOURCE_DIR}/bazel-bin)
+  set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/external/com_google_protobuf/protoc)
+  set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/src/compiler/grpc_cpp_plugin)
+
+  # make sure the protoc and grpc_cpp_plugin are found
+  find_program(
+    PROTOC_EXECUTABLE
+    NAMES protoc
+    PATHS ${GRPC_LIB_DIR}/external/com_google_protobuf)
+  find_program(
+    GRPC_PLUGIN_EXECUTABLE
+    NAMES grpc_cpp_plugin
+    PATHS ${GRPC_LIB_DIR}/src/compiler)
+
+  if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
+    message(STATUS "protoc: ${PROTOC_EXECUTABLE}")
+    message(STATUS "grpc_cpp_plugin: ${GRPC_PLUGIN_EXECUTABLE}")
+    message(FATAL_ERROR "protoc or grpc_cpp_plugin not found")
+  endif()
 
   # get all .a files in the lib directory
   file(GLOB GRPC_LIBRARIES ${GRPC_LIB_DIR}/*.a)
