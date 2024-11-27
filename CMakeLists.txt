@@ -59,6 +59,7 @@ target_sources(
           src/cloudvocal.cpp
           src/cloudvocal-callbacks.cpp
           src/cloudvocal-utils.cpp
+          src/cloudvocal-processing.cpp
           src/cloudvocal-properties.cpp
           src/cloud-providers/clova/clova-realtime.cpp
           src/cloud-providers/clova/nest.pb.cc

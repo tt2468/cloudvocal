@@ -29,6 +29,7 @@ struct cloudvocal_data {
 	std::deque<float> input_buffers[8];
 	std::deque<cloudvocal_audio_info> info_buffer;
 	std::deque<float> resampled_buffer;
+	uint32_t last_num_frames;
 
 	// File output options
 	bool save_only_while_recording;
