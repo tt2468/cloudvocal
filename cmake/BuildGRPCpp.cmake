@@ -79,6 +79,11 @@ else()
       CACHE STRING "gRPC libraries")
 endif()
 
+message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")
+message(STATUS "gRPC library directory: ${GRPC_LIB_DIR}")
+message(STATUS "protoc executable: ${PROTOC_EXECUTABLE}")
+message(STATUS "grpc_cpp_plugin executable: ${GRPC_PLUGIN_EXECUTABLE}")
+
 # Add include directories
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${GRPC_INCLUDE_DIR})
 
