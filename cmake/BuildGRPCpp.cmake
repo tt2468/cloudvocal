@@ -25,7 +25,7 @@ if(WIN32)
 else()
   include(ExternalProject)
 
-  # Set the gRPC version you want to use
+  message(STATUS "Building gRPC from source")
 
   # Enable ccache if available
   find_program(CCACHE_PROGRAM ccache)
@@ -58,7 +58,7 @@ else()
                -DgRPC_INSTALL=ON
                -DgRPC_BUILD_TESTS=OFF
                ${EXTRA_CMAKE_ARGS}
-    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target install --config Release ${EXTRA_CMAKE_BUILD_ARGS}
+    BUILD_COMMAND ${CMAKE_COMMAND} --build . --config Release ${EXTRA_CMAKE_BUILD_ARGS}
     INSTALL_COMMAND ${CMAKE_COMMAND} --install <INSTALL_DIR> --config ${CMAKE_BUILD_TYPE}
     LOG_DOWNLOAD ON
     LOG_CONFIGURE ON
