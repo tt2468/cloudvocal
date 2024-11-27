@@ -35,7 +35,7 @@ runs:
         echo ::endgroup::
 
     - name: Build gRPC 🛠️
-      if: runner.os == 'Linux' || runner.os == 'macOS'
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         : Build gRPC 🛠️
