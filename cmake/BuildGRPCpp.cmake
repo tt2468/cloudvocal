@@ -41,7 +41,6 @@ else()
   # Define the external project for gRPC
   ExternalProject_Add(
     grpc
-    PREFIX ${CMAKE_BINARY_DIR}/grpc
     GIT_REPOSITORY https://github.com/grpc/grpc.git
     GIT_TAG ${GRPC_VERSION}
     GIT_SHALLOW TRUE
@@ -59,11 +58,9 @@ else()
     LOG_INSTALL ON)
 
   # Specify include directories and link libraries for your project
-  ExternalProject_Get_Property(grpc source_dir)
-  set(GRPC_INCLUDE_DIR ${grpc_SOURCE_DIR}/include)
-  set(GRPC_LIB_DIR ${grpc_SOURCE_DIR}/bazel-bin)
-  set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/external/com_google_protobuf/protoc)
-  set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/bazel-bin/src/compiler/grpc_cpp_plugin)
+  ExternalProject_Get_Property(grpc SOURCE_DIR)
+  set(GRPC_INCLUDE_DIR ${SOURCE_DIR}/include)
+  set(GRPC_LIB_DIR ${SOURCE_DIR}/bazel-bin)
 
   add_dependencies(${CMAKE_PROJECT_NAME} grpc)
 
@@ -71,11 +68,11 @@ else()
   find_program(
     PROTOC_EXECUTABLE
     NAMES protoc
-    PATHS ${GRPC_LIB_DIR}/external/com_google_protobuf)
+    PATHS $${SOURCE_DIR}/bazel-bin/external/com_google_protobuf/)
   find_program(
     GRPC_PLUGIN_EXECUTABLE
     NAMES grpc_cpp_plugin
-    PATHS ${GRPC_LIB_DIR}/src/compiler)
+    PATHS ${SOURCE_DIR}/bazel-bin/src/compiler/)
 
   if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
     message(STATUS "protoc: ${PROTOC_EXECUTABLE}")
