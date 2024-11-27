@@ -45,8 +45,8 @@ runs:
         cd grpc
         git submodule update --init
         bazel build --compilation_mode=opt --build_tag_filters="-protos" \
-          --repo_env=CC="ccache $(if [[ "$RUNNER_OS" == "Linux" ]]; then echo gcc; else echo clang; fi)" \
-          --repo_env=CXX="ccache $(if [[ "$RUNNER_OS" == "Linux" ]]; then echo g++; else echo clang++; fi)" \
+          --repo_env=CC="$(if [[ "$RUNNER_OS" == "Linux" ]]; then echo /usr/bin/ccache /usr/bin/gcc; else echo ccache clang; fi)" \
+          --repo_env=CXX="$(if [[ "$RUNNER_OS" == "Linux" ]]; then echo /usr/bin/ccache /usr/bin/g++; else echo ccache clang++; fi)" \
           @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         echo "GRPC_SOURCE_DIR=$(pwd)/include" >> $GITHUB_ENV
         echo "GRPC_BUILD_DIR=$(bazel info output_base)" >> $GITHUB_ENV
