@@ -21,12 +21,12 @@ else()
   set(_obs_clang_objc_options
       # cmake-format: sortable
       -Werror=block-capture-autoreleasing
+      -Wno-error=unused-parameter
+      -Wno-error=unused-variable
       -Wno-selector
       -Wno-strict-selector-match
       -Wno-unused-function
       -Wno-unused-parameter
-      -Wno-error=unused-parameter
-      -Wno-error=unused-variable
       -Wno-unused-private-field
       -Wno-unused-variable
       -Wnon-virtual-dtor

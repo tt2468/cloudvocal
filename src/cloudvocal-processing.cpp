@@ -36,7 +36,6 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 		// pop all infos from the info buffer and mark the beginning timestamp from the first
 		// info as the beginning timestamp of the segment
 		struct cloudvocal_audio_info info_from_buf = {0};
-		const size_t size_of_audio_info = sizeof(cloudvocal_audio_info);
 		while (gf->info_buffer.size() > 0) {
 			info_from_buf = gf->info_buffer.front();
 			num_frames_from_infos += info_from_buf.frames;
