@@ -73,11 +73,12 @@ protected:
 		}
 	}
 
+	cloudvocal_data *gf;
+
 private:
 	TranscriptionCallback transcription_callback;
 	std::thread transcription_thread;
 	std::atomic<bool> running;
-	cloudvocal_data *gf;
 };
 
 std::shared_ptr<CloudProvider> createCloudProvider(const std::string &providerType,

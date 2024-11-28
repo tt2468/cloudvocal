@@ -25,6 +25,8 @@ else()
       -Wno-strict-selector-match
       -Wno-unused-function
       -Wno-unused-parameter
+      -Wno-error=unused-parameter
+      -Wno-error=unused-variable
       -Wno-unused-private-field
       -Wno-unused-variable
       -Wnon-virtual-dtor

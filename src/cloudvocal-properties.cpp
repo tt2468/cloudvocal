@@ -244,6 +244,8 @@ void add_file_output_group_properties(obs_properties_t *ppts)
 
 void add_advanced_group_properties(obs_properties_t *ppts, struct cloudvocal_data *gf)
 {
+	UNUSED_PARAMETER(gf);
+
 	// add a group for advanced configuration
 	obs_properties_t *advanced_config_group = obs_properties_create();
 	obs_properties_add_group(ppts, "advanced_group", MT_("advanced_group"), OBS_GROUP_NORMAL,

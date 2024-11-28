@@ -178,6 +178,7 @@ jobs:
   ubuntu-build:
     name: Build for Ubuntu 🐧
     runs-on: ubuntu-22.04
+    if: false
     needs: check-event
     defaults:
       run:

@@ -96,9 +96,13 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 		float *resampled_16khz[8];
 		uint32_t resampled_16khz_frames;
 		uint64_t ts_offset;
+		uint8_t *copy_buffers_8[8];
+		for (size_t c = 0; c < gf->channels; c++) {
+			copy_buffers_8[c] = (uint8_t *)copy_buffers[c].data();
+		}
 		bool success = audio_resampler_resample(gf->resampler, (uint8_t **)resampled_16khz,
 							&resampled_16khz_frames, &ts_offset,
-							(const uint8_t **)copy_buffers[0].data(),
+							(const uint8_t **)copy_buffers_8,
 							(uint32_t)num_frames_from_infos);
 
 		if (!success) {
