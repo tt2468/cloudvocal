@@ -76,3 +76,7 @@ private:
 	std::atomic<bool> running;
 	cloudvocal_data *gf;
 };
+
+std::shared_ptr<CloudProvider> createCloudProvider(const std::string &providerType,
+						   CloudProvider::TranscriptionCallback callback,
+						   cloudvocal_data *gf);

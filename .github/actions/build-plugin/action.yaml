@@ -46,9 +46,9 @@ runs:
         bazel build --compilation_mode=opt --build_tag_filters="-protos" \
           @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         
-        echo "PROTOC_EXECUTABLE=$(bazel cquery --output=files @com_google_protobuf//:protoc 2>/dev/null | grep "protoc$")" >> $GITHUB_ENV
-        echo "GRPC_PLUGIN_EXECUTABLE=$(bazel cquery --output=files @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin 2>/dev/null | grep "grpc_cpp_plugin$")" >> $GITHUB_ENV
-        echo 
+        echo "PROTOC_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_google_protobuf//:protoc 2>/dev/null | grep "protoc$"))" >> $GITHUB_ENV
+        echo "GRPC_PLUGIN_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin 2>/dev/null | grep "grpc_cpp_plugin$"))" >> $GITHUB_ENV
+        echo "GRPC_INCLUDE_DIR=$(realpath $(pwd)/include)" >> $GITHUB_ENV
 
         echo ::endgroup::
 

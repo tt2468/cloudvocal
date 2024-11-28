@@ -17,6 +17,7 @@
 #include "cloudvocal-data.h"
 #include "cloudvocal-callbacks.h"
 #include "cloudvocal-utils.h"
+#include "cloud-providers/cloud-provider.h"
 
 void set_source_signals(cloudvocal_data *gf, obs_source_t *parent_source)
 {
@@ -228,6 +229,14 @@ void cloudvocal_update(void *data, obs_data_t *s)
 			// source was enabled on creation
 			gf->active = true;
 			gf->initial_creation = false;
+
+			gf->cloud_provider = createCloudProvider(
+				"clova",
+				[](const std::string &) {
+					// callback
+					obs_log(LOG_INFO, "Transcription callback");
+				},
+				gf);
 		}
 	} else {
 		obs_log(LOG_INFO, "Filter not enabled.");

@@ -23,29 +23,14 @@ if(WIN32)
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")
 elseif(UNIX AND NOT APPLE)
-  # ensure the grpc enviroment variables (GRPC_SOURCE_DIR, GRPC_BUILD_DIR) are set
   if(NOT DEFINED ENV{PROTOC_EXECUTABLE} OR NOT DEFINED ENV{GRPC_PLUGIN_EXECUTABLE})
     message(FATAL_ERROR "PROTOC_EXECUTABLE and GRPC_PLUGIN_EXECUTABLE environment variables not set")
   endif()
 
   # make sure the protoc and grpc_cpp_plugin are found
-  find_program(
-    PROTOC_EXECUTABLE
-    NAMES protoc
-    PATHS $ENV{PROTOC_EXECUTABLE} REQUIRED)
-  find_program(
-    GRPC_PLUGIN_EXECUTABLE
-    NAMES grpc_cpp_plugin
-    PATHS $ENV{GRPC_PLUGIN_EXECUTABLE} REQUIRED)
-
-  if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
-    message(STATUS "protoc: ${PROTOC_EXECUTABLE}")
-    message(STATUS "grpc_cpp_plugin: ${GRPC_PLUGIN_EXECUTABLE}")
-    message(FATAL_ERROR "protoc or grpc_cpp_plugin not found")
-  endif()
-
-  # # make sure the grpc include dir is found set(GRPC_INCLUDE_DIR $ENV{GRPC_SOURCE_DIR}) if(NOT EXISTS
-  # ${GRPC_INCLUDE_DIR}) message(FATAL_ERROR "gRPC include directory not found") endif()
+  set(PROTOC_EXECUTABLE $ENV{PROTOC_EXECUTABLE})
+  set(GRPC_PLUGIN_EXECUTABLE $ENV{GRPC_PLUGIN_EXECUTABLE})
+  set(GRPC_INCLUDE_DIR $ENV{GRPC_INCLUDE_DIR})
 
   # # get all .a files in the lib directory file(GLOB GRPC_LIBRARIES "$ENV{GRPC_BUILD_DIR}/*.a") set(GRPC_LIBRARIES
   # ${GRPC_LIBRARIES} CACHE STRING "gRPC libraries")
@@ -61,6 +46,10 @@ message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")
 message(STATUS "gRPC library directory: ${GRPC_LIB_DIR}")
 message(STATUS "protoc executable: ${PROTOC_EXECUTABLE}")
 message(STATUS "grpc_cpp_plugin executable: ${GRPC_PLUGIN_EXECUTABLE}")
+
+if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
+  message(FATAL_ERROR "protoc or grpc_cpp_plugin not found")
+endif()
 
 # Add include directories
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${GRPC_INCLUDE_DIR})
