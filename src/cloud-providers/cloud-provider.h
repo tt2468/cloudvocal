@@ -59,7 +59,10 @@ protected:
 
 			gf->resampled_buffer.clear();
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			// sleep until the next audio packet is ready
+			// wait for notificaiton from the audio buffer condition variable
+			std::unique_lock<std::mutex> lock(gf->input_buffers_mutex);
+			gf->input_buffers_cv.wait(lock);
 		}
 	}
 

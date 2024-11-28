@@ -237,6 +237,13 @@ void cloudvocal_update(void *data, obs_data_t *s)
 					obs_log(LOG_INFO, "Transcription callback");
 				},
 				gf);
+			if (gf->cloud_provider == nullptr) {
+				obs_log(LOG_ERROR, "Failed to create cloud provider");
+				gf->active = false;
+				return;
+			}
+			gf->cloud_provider->init();
+			gf->cloud_provider->start();
 		}
 	} else {
 		obs_log(LOG_INFO, "Filter not enabled.");
