@@ -43,10 +43,9 @@ runs:
         git clone https://github.com/grpc/grpc.git --depth 1
         cd grpc
         git submodule update --init
-        bazel build --compilation_mode=opt --build_tag_filters="-protos" \
-          @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
+        bazel build --compilation_mode=opt @com_github_grpc_grpc//:grpc++ @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
         
-        echo "PROTOC_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_google_protobuf//:protoc 2>/dev/null | grep "opt.*protoc$"))" >> $GITHUB_ENV
+        echo "PROTOC_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_google_protobuf//:protoc 2>/dev/null | grep "protoc$" | sed 's/fastbuild/opt/g'))" >> $GITHUB_ENV
         echo "GRPC_PLUGIN_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin 2>/dev/null | sed 's/fastbuild/opt/g'))" >> $GITHUB_ENV
         echo "GRPC_INCLUDE_DIR=$(realpath $(pwd)/include)" >> $GITHUB_ENV
 

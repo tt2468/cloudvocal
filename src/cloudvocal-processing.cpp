@@ -6,6 +6,7 @@
 #include <obs.h>
 
 #include <vector>
+#include "plugin-support.h"
 
 int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestamp_offset_ns,
 				   uint64_t &end_timestamp_offset_ns)
@@ -23,7 +24,7 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 			return 1;
 		}
 
-#ifdef LOCALVOCAL_EXTRA_VERBOSE
+#ifdef CLOUDVOCAL_EXTRA_VERBOSE
 		obs_log(gf->log_level,
 			"segmentation: currently %lu bytes in the audio input buffer",
 			gf->input_buffers[0].size);
@@ -75,27 +76,40 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 		}
 	}
 
-#ifdef LOCALVOCAL_EXTRA_VERBOSE
+#ifdef CLOUDVOCAL_EXTRA_VERBOSE
 	obs_log(gf->log_level, "found %d frames from info buffer.", num_frames_from_infos);
 #endif
 	gf->last_num_frames = num_frames_from_infos;
+
+	if (num_frames_from_infos <= 0 || copy_buffers[0].empty()) {
+		obs_log(LOG_ERROR, "No audio data found in the input buffer");
+		return 1;
+	}
+
+	if (gf->resampler == nullptr) {
+		obs_log(LOG_ERROR, "Resampler is not initialized");
+		return 1;
+	}
 
 	{
 		// resample to 16kHz
 		float *resampled_16khz[8];
 		uint32_t resampled_16khz_frames;
 		uint64_t ts_offset;
-		{
-			audio_resampler_resample(gf->resampler, (uint8_t **)resampled_16khz,
-						 &resampled_16khz_frames, &ts_offset,
-						 (const uint8_t **)copy_buffers[0].data(),
-						 (uint32_t)num_frames_from_infos);
+		bool success = audio_resampler_resample(gf->resampler, (uint8_t **)resampled_16khz,
+							&resampled_16khz_frames, &ts_offset,
+							(const uint8_t **)copy_buffers[0].data(),
+							(uint32_t)num_frames_from_infos);
+
+		if (!success) {
+			obs_log(LOG_ERROR, "Failed to resample audio data");
+			return 1;
 		}
 
 		// push back resampled data to resampled buffer
 		gf->resampled_buffer.insert(gf->resampled_buffer.end(), resampled_16khz[0],
 					    resampled_16khz[0] + resampled_16khz_frames);
-#ifdef LOCALVOCAL_EXTRA_VERBOSE
+#ifdef CLOUDVOCAL_EXTRA_VERBOSE
 		obs_log(gf->log_level,
 			"resampled: %d channels, %d frames, %f ms, current size: %lu bytes",
 			(int)gf->channels, (int)resampled_16khz_frames,
