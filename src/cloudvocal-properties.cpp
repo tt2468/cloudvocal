@@ -148,9 +148,8 @@ void add_translation_cloud_group_properties(obs_properties_t *ppts)
 		translation_cloud_group, "translate_cloud_target_language", MT_("target_language"),
 		OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
 	// Populate the dropdown with the language codes
-	for (const auto &language : language_codes) {
-		obs_property_list_add_string(prop_tgt, language.second.c_str(),
-					     language.first.c_str());
+	for (auto const &pair : language_codes_reverse) {
+		obs_property_list_add_string(prop_tgt, pair.first.c_str(), pair.second.c_str());
 	}
 	// add option for routing the translation to an output source
 	obs_property_t *prop_output = obs_properties_add_list(
@@ -366,7 +365,7 @@ void cloudvocal_defaults(obs_data_t *s)
 	obs_data_set_default_int(s, "log_level", LOG_DEBUG);
 	obs_data_set_default_bool(s, "log_words", false);
 	obs_data_set_default_bool(s, "caption_to_stream", false);
-	obs_data_set_default_string(s, "transcription_language_select", "en");
+	obs_data_set_default_string(s, "transcription_language_select", "__en__");
 	obs_data_set_default_string(s, "transcription_cloud_provider", "clova");
 	obs_data_set_default_string(s, "subtitle_sources", "none");
 	obs_data_set_default_bool(s, "process_while_muted", false);
@@ -383,7 +382,7 @@ void cloudvocal_defaults(obs_data_t *s)
 	// cloud translation options
 	obs_data_set_default_bool(s, "translate_cloud", false);
 	obs_data_set_default_string(s, "translate_cloud_provider", "google");
-	obs_data_set_default_string(s, "translate_cloud_target_language", "en");
+	obs_data_set_default_string(s, "translate_cloud_target_language", "__en__");
 	obs_data_set_default_string(s, "translate_cloud_output", "none");
 	obs_data_set_default_bool(s, "translate_cloud_only_full_sentences", true);
 	obs_data_set_default_string(s, "translate_cloud_api_key", "");

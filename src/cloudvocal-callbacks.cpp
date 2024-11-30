@@ -305,6 +305,9 @@ void recording_state_callback(enum obs_frontend_event event, void *data)
 			gf_->start_timestamp_ms = now_ms();
 		}
 	} else if (event == OBS_FRONTEND_EVENT_RECORDING_STOPPED) {
+		if (!gf_->save_to_file || gf_->output_file_path.empty()) {
+			return;
+		}
 		if (!gf_->save_only_while_recording || !gf_->rename_file_to_match_recording) {
 			return;
 		}

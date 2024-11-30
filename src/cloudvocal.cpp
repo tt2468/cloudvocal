@@ -77,7 +77,7 @@ struct obs_audio_data *cloudvocal_filter_audio(void *data, struct obs_audio_data
 		}
 	}
 
-	{
+	if (gf->cloud_provider != nullptr && gf->cloud_provider->isRunning()) {
 		std::lock_guard<std::mutex> lock(gf->input_buffers_mutex); // scoped lock
 		// audio->data[c] holds uint8_t data but it's actually float data
 		// so we need to convert it to a float data pointer
