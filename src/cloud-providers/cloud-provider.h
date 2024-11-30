@@ -8,10 +8,11 @@
 
 #include "cloudvocal-processing.h"
 #include "cloudvocal-data.h"
+#include "plugin-support.h"
 
 class CloudProvider {
 public:
-	using TranscriptionCallback = std::function<void(const std::string &)>;
+	using TranscriptionCallback = std::function<void(const DetectionResultWithText &)>;
 
 	CloudProvider(TranscriptionCallback callback, cloudvocal_data *gf_)
 		: transcription_callback(callback),
@@ -22,12 +23,13 @@ public:
 
 	virtual ~CloudProvider() { stop(); }
 
-	virtual void init() = 0;
+	virtual bool init() = 0;
 
 	void start()
 	{
 		running = true;
 		transcription_thread = std::thread(&CloudProvider::processAudio, this);
+		results_thread = std::thread(&CloudProvider::processResults, this);
 	}
 
 	void stop()
@@ -36,13 +38,27 @@ public:
 		if (transcription_thread.joinable()) {
 			transcription_thread.join();
 		}
+		if (results_thread.joinable()) {
+			results_thread.join();
+		}
 	}
+
+	bool isRunning() const { return running; }
 
 protected:
 	virtual void sendAudioBufferToTranscription(const std::deque<float> &audio_buffer) = 0;
+	virtual void readResultsFromTranscription() = 0;
+	virtual void shutdown() = 0;
 
 	void processAudio()
 	{
+		// Initialize the cloud provider
+		if (!init()) {
+			obs_log(LOG_ERROR, "Failed to initialize cloud provider");
+			running = false;
+			return;
+		}
+
 		uint64_t start_timestamp_offset_ns = 0;
 		uint64_t end_timestamp_offset_ns = 0;
 
@@ -62,25 +78,33 @@ protected:
 			// sleep until the next audio packet is ready
 			// wait for notificaiton from the audio buffer condition variable
 			std::unique_lock<std::mutex> lock(gf->input_buffers_mutex);
-			gf->input_buffers_cv.wait(lock);
+			gf->input_buffers_cv.wait(lock, [this] {
+				return !(gf->input_buffers[0]).empty() || !running;
+			});
 		}
+
+		// Shutdown the cloud provider
+		shutdown();
 	}
 
-	void reportTranscriptionResult(const std::string &result)
+	void processResults()
 	{
-		if (transcription_callback) {
-			transcription_callback(result);
+		while (running) {
+			readResultsFromTranscription();
 		}
 	}
 
 	cloudvocal_data *gf;
+	std::atomic<bool> running;
+	TranscriptionCallback transcription_callback;
 
 private:
-	TranscriptionCallback transcription_callback;
 	std::thread transcription_thread;
-	std::atomic<bool> running;
+	std::thread results_thread;
 };
 
 std::shared_ptr<CloudProvider> createCloudProvider(const std::string &providerType,
 						   CloudProvider::TranscriptionCallback callback,
 						   cloudvocal_data *gf);
+
+void restart_cloud_provider(cloudvocal_data *gf);

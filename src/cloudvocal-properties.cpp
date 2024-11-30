@@ -9,37 +9,10 @@
 #include "cloudvocal-data.h"
 #include "cloudvocal.h"
 #include "cloudvocal-utils.h"
-#include "cloud-translation/language-codes.h"
+#include "language-codes/language-codes.h"
 #include "plugin-support.h"
 // #include "ui/filter-replace-dialog.h"
 // #include "ui/filter-replace-utils.h"
-
-bool translation_options_callback(obs_properties_t *props, obs_property_t *property,
-				  obs_data_t *settings)
-{
-	UNUSED_PARAMETER(property);
-	// Show/Hide the translation group
-	const bool translate_enabled = obs_data_get_bool(settings, "translate");
-	const bool is_advanced = obs_data_get_int(settings, "advanced_settings_mode") == 1;
-	for (const auto &prop :
-	     {"translate_target_language", "translate_model", "translate_output"}) {
-		obs_property_set_visible(obs_properties_get(props, prop), translate_enabled);
-	}
-	for (const auto &prop :
-	     {"translate_add_context", "translate_input_tokenization_style",
-	      "translation_sampling_temperature", "translation_repetition_penalty",
-	      "translation_beam_size", "translation_max_decoding_length",
-	      "translation_no_repeat_ngram_size", "translation_max_input_length",
-	      "translate_only_full_sentences"}) {
-		obs_property_set_visible(obs_properties_get(props, prop),
-					 translate_enabled && is_advanced);
-	}
-	const bool is_external =
-		(strcmp(obs_data_get_string(settings, "translate_model"), "!!!external!!!") == 0);
-	obs_property_set_visible(obs_properties_get(props, "translation_model_path_external"),
-				 is_external && translate_enabled);
-	return true;
-}
 
 bool translation_cloud_provider_selection_callback(obs_properties_t *props, obs_property_t *p,
 						   obs_data_t *s)
@@ -95,11 +68,9 @@ bool advanced_settings_callback(obs_properties_t *props, obs_property_t *propert
 	// If advanced settings is enabled, show the advanced settings group
 	const bool show_hide = obs_data_get_int(settings, "advanced_settings_mode") == 1;
 	for (const std::string &prop_name :
-	     {"whisper_params_group", "buffered_output_group", "log_group", "advanced_group",
-	      "file_output_enable", "partial_group"}) {
+	     {"log_group", "advanced_group", "file_output_enable", "partial_group"}) {
 		obs_property_set_visible(obs_properties_get(props, prop_name.c_str()), show_hide);
 	}
-	translation_options_callback(props, NULL, settings);
 	translation_cloud_options_callback(props, NULL, settings);
 	return true;
 }
@@ -253,16 +224,12 @@ void add_advanced_group_properties(obs_properties_t *ppts, struct cloudvocal_dat
 
 	obs_properties_add_bool(advanced_config_group, "caption_to_stream",
 				MT_("caption_to_stream"));
-
+	obs_properties_add_bool(advanced_config_group, "process_while_muted",
+				MT_("process_while_muted"));
 	obs_properties_add_int_slider(advanced_config_group, "min_sub_duration",
 				      MT_("min_sub_duration"), 1000, 5000, 50);
 	obs_properties_add_int_slider(advanced_config_group, "max_sub_duration",
 				      MT_("max_sub_duration"), 1000, 5000, 50);
-	obs_properties_add_float_slider(advanced_config_group, "sentence_psum_accept_thresh",
-					MT_("sentence_psum_accept_thresh"), 0.0, 1.0, 0.05);
-
-	obs_properties_add_bool(advanced_config_group, "process_while_muted",
-				MT_("process_while_muted"));
 
 	// add button to open filter and replace UI dialog
 	// obs_properties_add_button2(
@@ -312,11 +279,11 @@ void add_general_group_properties(obs_properties_t *ppts)
 	obs_property_t *transcription_cloud_provider_select_list = obs_properties_add_list(
 		general_group, "transcription_cloud_provider", MT_("transcription_cloud_provider"),
 		OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
-	// add the available cloud providers: Clova and Google
+	// add the available cloud providers: Clova
 	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Clova"),
 				     "clova");
-	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
-				     "google");
+	// obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
+	// 			     "google");
 
 	obs_property_t *subs_output =
 		obs_properties_add_list(general_group, "subtitle_sources", MT_("subtitle_sources"),
@@ -335,6 +302,10 @@ void add_general_group_properties(obs_properties_t *ppts)
 		obs_property_list_add_string(transcription_language_select_list, pair.first.c_str(),
 					     pair.second.c_str());
 	}
+
+	// add text input for API Key
+	obs_properties_add_text(general_group, "transcription_cloud_provider_api_key",
+				MT_("transcription_cloud_provider_api_key"), OBS_TEXT_PASSWORD);
 }
 
 void add_partial_group_properties(obs_properties_t *ppts)
@@ -376,13 +347,13 @@ obs_properties_t *cloudvocal_properties(void *data)
 	add_partial_group_properties(ppts);
 
 	// Add a informative text about the plugin
-	const char *template_out = PLUGIN_INFO_TEMPLATE;
+	std::string template_out = PLUGIN_INFO_TEMPLATE;
 	std::string version_str = PLUGIN_VERSION;
-	size_t pos = std::string(template_out).find("{{plugin_version}}");
+	size_t pos = template_out.find("{{plugin_version}}");
 	if (pos != std::string::npos) {
-		template_out = std::string(template_out).replace(pos, 17, version_str).c_str();
+		template_out = template_out.replace(pos, 17, version_str).c_str();
 	}
-	obs_properties_add_text(ppts, "info", template_out, OBS_TEXT_INFO);
+	obs_properties_add_text(ppts, "info", template_out.c_str(), OBS_TEXT_INFO);
 
 	UNUSED_PARAMETER(data);
 	return ppts;
@@ -392,13 +363,11 @@ void cloudvocal_defaults(obs_data_t *s)
 {
 	obs_log(LOG_DEBUG, "filter defaults");
 
-	obs_data_set_default_double(s, "duration_filter_threshold", 2.25);
-	obs_data_set_default_int(s, "segment_duration", 7000);
 	obs_data_set_default_int(s, "log_level", LOG_DEBUG);
 	obs_data_set_default_bool(s, "log_words", false);
 	obs_data_set_default_bool(s, "caption_to_stream", false);
-	obs_data_set_default_string(s, "whisper_model_path", "Whisper Tiny English (74Mb)");
 	obs_data_set_default_string(s, "transcription_language_select", "en");
+	obs_data_set_default_string(s, "transcription_cloud_provider", "clova");
 	obs_data_set_default_string(s, "subtitle_sources", "none");
 	obs_data_set_default_bool(s, "process_while_muted", false);
 	obs_data_set_default_bool(s, "subtitle_save_srt", false);
@@ -408,7 +377,6 @@ void cloudvocal_defaults(obs_data_t *s)
 	obs_data_set_default_int(s, "min_sub_duration", 1000);
 	obs_data_set_default_int(s, "max_sub_duration", 3000);
 	obs_data_set_default_bool(s, "advanced_settings", false);
-	obs_data_set_default_double(s, "sentence_psum_accept_thresh", 0.4);
 	obs_data_set_default_bool(s, "partial_group", true);
 	obs_data_set_default_int(s, "partial_latency", 1100);
 

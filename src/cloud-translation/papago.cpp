@@ -24,33 +24,6 @@ PapagoTranslator::PapagoTranslator(const std::string &client_id, const std::stri
 
 PapagoTranslator::~PapagoTranslator() = default;
 
-std::string PapagoTranslator::mapLanguageCode(const std::string &lang_code) const
-{
-	// Map common ISO language codes to Papago codes
-	static const std::unordered_map<std::string, std::string> code_map = {
-		{"auto", "auto"},   {"ko", "ko"}, // Korean
-		{"en", "en"},                     // English
-		{"ja", "ja"},                     // Japanese
-		{"zh", "zh-CN"},                  // Chinese (Simplified)
-		{"zh-CN", "zh-CN"},               // Chinese (Simplified)
-		{"zh-TW", "zh-TW"},               // Chinese (Traditional)
-		{"vi", "vi"},                     // Vietnamese
-		{"th", "th"},                     // Thai
-		{"id", "id"},                     // Indonesian
-		{"fr", "fr"},                     // French
-		{"es", "es"},                     // Spanish
-		{"ru", "ru"},                     // Russian
-		{"de", "de"},                     // German
-		{"it", "it"}                      // Italian
-	};
-
-	auto it = code_map.find(lang_code);
-	if (it != code_map.end()) {
-		return it->second;
-	}
-	throw TranslationError("Unsupported language code: " + lang_code);
-}
-
 bool PapagoTranslator::isLanguagePairSupported(const std::string &source,
 					       const std::string &target) const
 {
@@ -141,10 +114,7 @@ std::string PapagoTranslator::translate(const std::string &text, const std::stri
 					    '_'),
 				target_lang_valid.end());
 
-	std::string papago_source = mapLanguageCode(source_lang);
-	std::string papago_target = mapLanguageCode(target_lang_valid);
-
-	if (!isLanguagePairSupported(papago_source, papago_target)) {
+	if (!isLanguagePairSupported(source_lang, target_lang_valid)) {
 		throw TranslationError("Unsupported language pair: " + source_lang + " to " +
 				       target_lang);
 	}
@@ -163,8 +133,8 @@ std::string PapagoTranslator::translate(const std::string &text, const std::stri
 		std::string url = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation";
 
 		// Create request body
-		json request_body = {{"source", papago_source},
-				     {"target", papago_target},
+		json request_body = {{"source", source_lang},
+				     {"target", target_lang_valid},
 				     {"text", text}};
 		std::string payload = request_body.dump();
 

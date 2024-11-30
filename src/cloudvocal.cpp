@@ -79,10 +79,16 @@ struct obs_audio_data *cloudvocal_filter_audio(void *data, struct obs_audio_data
 
 	{
 		std::lock_guard<std::mutex> lock(gf->input_buffers_mutex); // scoped lock
+		// audio->data[c] holds uint8_t data but it's actually float data
+		// so we need to convert it to a float data pointer
+		float *audio_data_f32[8];
+		for (size_t c = 0; c < gf->channels; c++) {
+			audio_data_f32[c] = (float *)audio->data[c];
+		}
 		// push back current audio data to input circlebuf
 		for (size_t c = 0; c < gf->channels; c++) {
-			gf->input_buffers[c].insert(gf->input_buffers[c].end(), audio->data[c],
-						    audio->data[c] + audio->frames);
+			gf->input_buffers[c].insert(gf->input_buffers[c].end(), audio_data_f32[c],
+						    audio_data_f32[c] + audio->frames);
 		}
 		// push audio packet info (timestamp/frame count) to info circlebuf
 		struct cloudvocal_audio_info info = {0};
@@ -178,18 +184,6 @@ void cloudvocal_update(void *data, obs_data_t *s)
 		}
 	}
 
-	bool new_translate = obs_data_get_bool(s, "translate");
-	gf->target_lang = obs_data_get_string(s, "translate_target_language");
-	gf->translate_only_full_sentences = obs_data_get_bool(s, "translate_only_full_sentences");
-	gf->translation_output = obs_data_get_string(s, "translate_output");
-	std::string new_translate_model_index = obs_data_get_string(s, "translate_model");
-	std::string new_translation_model_path_external =
-		obs_data_get_string(s, "translation_model_path_external");
-
-	if (!new_translate) {
-		gf->translate = false;
-	}
-
 	gf->translate = obs_data_get_bool(s, "translate_cloud");
 	gf->translate_cloud_config.provider = obs_data_get_string(s, "translate_cloud_provider");
 	gf->target_lang = obs_data_get_string(s, "translate_cloud_target_language");
@@ -220,7 +214,22 @@ void cloudvocal_update(void *data, obs_data_t *s)
 
 	const char *transcription_language_select =
 		obs_data_get_string(s, "transcription_language_select");
-	gf->language = transcription_language_select;
+	std::string new_language = transcription_language_select;
+	std::string new_cloud_provider_api_key =
+		obs_data_get_string(s, "transcription_cloud_provider_api_key");
+	std::string new_cloud_provider_selection =
+		obs_data_get_string(s, "transcription_cloud_provider");
+
+	if (gf->cloud_provider_selection != new_cloud_provider_selection ||
+	    gf->language != new_language ||
+	    gf->cloud_provider_api_key != new_cloud_provider_api_key) {
+		// cloud provider selection or api key changed
+		obs_log(gf->log_level, "cloud provider selection or api key changed");
+		gf->cloud_provider_selection = new_cloud_provider_selection;
+		gf->language = new_language;
+		gf->cloud_provider_api_key = new_cloud_provider_api_key;
+		restart_cloud_provider(gf);
+	}
 
 	if (gf->context != nullptr && (obs_source_enabled(gf->context) || gf->initial_creation)) {
 		if (gf->initial_creation) {
@@ -230,20 +239,7 @@ void cloudvocal_update(void *data, obs_data_t *s)
 			gf->active = true;
 			gf->initial_creation = false;
 
-			gf->cloud_provider = createCloudProvider(
-				"clova",
-				[](const std::string &) {
-					// callback
-					obs_log(LOG_INFO, "Transcription callback");
-				},
-				gf);
-			if (gf->cloud_provider == nullptr) {
-				obs_log(LOG_ERROR, "Failed to create cloud provider");
-				gf->active = false;
-				return;
-			}
-			gf->cloud_provider->init();
-			gf->cloud_provider->start();
+			restart_cloud_provider(gf);
 		}
 	} else {
 		obs_log(LOG_INFO, "Filter not enabled.");
@@ -310,7 +306,6 @@ void *cloudvocal_create(obs_data_t *settings, obs_source_t *filter)
 		// set the text source name
 		gf->text_source_name = subtitle_sources;
 	}
-	obs_log(gf->log_level, "clear paths and whisper context");
 	gf->output_file_path = std::string("");
 
 	signal_handler_t *sh_filter = obs_source_get_signal_handler(gf->context);
@@ -329,6 +324,8 @@ void *cloudvocal_create(obs_data_t *settings, obs_source_t *filter)
 	// handle the event OBS_FRONTEND_EVENT_RECORDING_STARTING to reset the srt sentence number
 	// to match the subtitles with the recording
 	obs_frontend_add_event_callback(recording_state_callback, gf);
+
+	clear_current_caption(gf);
 
 	obs_log(gf->log_level, "filter created.");
 	return gf;

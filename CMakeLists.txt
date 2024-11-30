@@ -61,6 +61,7 @@ target_sources(
           src/cloudvocal-utils.cpp
           src/cloudvocal-processing.cpp
           src/cloudvocal-properties.cpp
+          src/language-codes/language-codes.cpp
           src/cloud-providers/cloud-provider.cpp
           src/cloud-providers/clova/clova-realtime.cpp
           src/cloud-providers/clova/clova-provider.cpp)

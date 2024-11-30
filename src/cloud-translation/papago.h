@@ -14,7 +14,6 @@ public:
 
 private:
 	std::string parseResponse(const std::string &response_str);
-	std::string mapLanguageCode(const std::string &lang_code) const;
 	bool isLanguagePairSupported(const std::string &source, const std::string &target) const;
 
 	std::string client_id_;

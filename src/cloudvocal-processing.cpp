@@ -72,6 +72,10 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 			std::copy(gf->input_buffers[c].begin(),
 				  gf->input_buffers[c].begin() + num_frames_from_infos,
 				  copy_buffers[c].begin());
+			// Pop the data from the input buffer
+			gf->input_buffers[c].erase(gf->input_buffers[c].begin(),
+						   gf->input_buffers[c].begin() +
+							   num_frames_from_infos);
 		}
 	}
 
@@ -116,7 +120,7 @@ int get_data_from_buf_and_resample(cloudvocal_data *gf, uint64_t &start_timestam
 		obs_log(gf->log_level,
 			"resampled: %d channels, %d frames, %f ms, current size: %lu bytes",
 			(int)gf->channels, (int)resampled_16khz_frames,
-			(float)resampled_16khz_frames / WHISPER_SAMPLE_RATE * 1000.0f,
+			(float)resampled_16khz_frames / TRANSCRIPTION_SAMPLE_RATE * 1000.0f,
 			gf->resampled_buffer.size);
 #endif
 	}

@@ -49,7 +49,7 @@ std::string translate_cloud(const CloudTranslatorConfig &config, const std::stri
 {
 	try {
 		auto translator = createTranslator(config);
-		obs_log(LOG_INFO, "translate with cloud provider %s. %s -> %s",
+		obs_log(LOG_DEBUG, "translate with cloud provider %s. %s -> %s",
 			config.provider.c_str(), source_lang.c_str(), target_lang.c_str());
 		std::string result = translator->translate(text, target_lang, source_lang);
 		return result;

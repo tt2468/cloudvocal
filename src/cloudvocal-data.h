@@ -17,6 +17,21 @@ struct cloudvocal_audio_info {
 	uint64_t timestamp_offset_ns; // offset (since start of processing) timestamp in ns
 };
 
+enum DetectionResult {
+	DETECTION_RESULT_UNKNOWN = 0,
+	DETECTION_RESULT_SPEECH = 1,
+	DETECTION_RESULT_SILENCE = 2,
+	DETECTION_RESULT_PARTIAL = 3
+};
+
+struct DetectionResultWithText {
+	uint64_t start_timestamp_ms;
+	uint64_t end_timestamp_ms;
+	std::string text;
+	std::string language;
+	enum DetectionResult result;
+};
+
 class CloudProvider;
 
 struct cloudvocal_data {
@@ -57,6 +72,8 @@ struct cloudvocal_data {
 	bool log_words;
 	// smart pointer to the cloud provider
 	std::shared_ptr<CloudProvider> cloud_provider;
+	std::string cloud_provider_selection;
+	std::string cloud_provider_api_key;
 
 	std::map<std::string, std::string> filter_words_replace;
 
