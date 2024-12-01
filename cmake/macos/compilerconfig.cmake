@@ -52,7 +52,7 @@ else()
   # Enable color diagnostics for AppleClang
   set(CMAKE_COLOR_DIAGNOSTICS ON)
   # Set universal architectures via CMake flag for non-Xcode generators
-  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+  set(CMAKE_OSX_ARCHITECTURES "arm64") # TODO: add x86_64
 
   # Enable compiler and build tracing (requires Ninja generator)
   if(ENABLE_COMPILER_TRACE AND CMAKE_GENERATOR STREQUAL "Ninja")

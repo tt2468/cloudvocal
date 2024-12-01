@@ -1,172 +1,95 @@
-# OBS Plugin Template
+# CloudVocal - Professional Cloud AI Transcription & Translation for OBS
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/github/license/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/blob/main/LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/locaal-ai/obs-cloudvocal/push.yaml)](https://github.com/locaal-ai/obs-cloudvocal/actions/workflows/push.yaml)
+[![Total downloads](https://img.shields.io/github/downloads/locaal-ai/obs-cloudvocal/total)](https://github.com/locaal-ai/obs-cloudvocal/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/releases)
+[![GitHub stars](https://badgen.net/github/stars/locaal-ai/obs-cloudvocal)](https://GitHub.com/locaal-ai/obs-cloudvocal/stargazers/)
+[![Discord](https://img.shields.io/discord/1200229425141252116)](https://discord.gg/KbjGU2vvUz)
+<br/>
+Download:</br>
+<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
+<!--
+<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
+<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
+-->
+</div>
 
 ## Introduction
 
-The plugin template is meant to be used as a starting point for OBS Studio plugin development. It includes:
+CloudVocal brings professional-grade cloud transcription and translation to your OBS streams and recordings. Powered by industry-leading cloud providers, it delivers exceptional accuracy and real-time performance for your live streaming needs. ✅ Professional-grade accuracy, ✅ support for 100+ languages, ✅ enterprise-level reliability, and ✅ blazing-fast performance!
 
-* Boilerplate plugin source code
-* A CMake project file
-* GitHub Actions workflows and repository actions
+If this plugin has been valuable consider adding a ⭐ to this GH repo, rating it [on OBS](https://obsproject.com/forum/resources/authors/royshilkrot.319842/), subscribing to [my YouTube channel](https://www.youtube.com/@royshilk) where I post updates, and supporting my work on [GitHub](https://github.com/sponsors/royshil), [Patreon](https://www.patreon.com/RoyShilkrot) 🙏
 
-## Set Up
+CloudVocal integrates seamlessly with leading cloud providers to deliver enterprise-grade speech recognition and translation services. Simply configure your API credentials and start streaming with professional-quality captions and translations.
 
-The plugin project is set up using the included `buildspec.json` file. The following fields should be customized for an actual plugin:
+## Features
 
-* `name`: The plugin name
-* `version`: The plugin version
-* `author`: Actual name or nickname of the plugin's author
-* `website`: URL of a website associated with the plugin
-* `email`: Contact email address associated with the plugin
-* `uuids`
-    * `macosPackage`: Unique (**!**) identifier for the macOS plugin package
-    * `macosInstaller`: Unique (**!**) identifier for the macOS plugin installer
-    * `windowsApp`: Unique (**!**) identifier for the Windows plugin installer
+Current Features:
+- Professional-grade transcription with industry-leading accuracy
+- Real-time translation using enterprise cloud translation services
+- Support for 100+ languages with dialect recognition
+- Streaming-optimized performance with minimal latency
+- Multiple cloud provider options for transcription and translation
+- Caption output in multiple formats (.txt, .srt, .vtt)
+- Sync'ed captions with OBS recording timestamps
+- Direct streaming to platforms (YouTube, Twitch) with embedded captions
+- Advanced text filtering and customization options
+- Partial transcriptions for a streaming-captions experience
+- Custom vocabulary and pronunciation support
+- Professional terminology handling for specific industries
 
-These values are read and processed automatically by the CMake build scripts, so no further adjustments in other files are needed.
+Roadmap:
+- Speaker diarization for multi-speaker environments
+- Advanced profanity filtering options
+- Custom translation glossaries
+- Additional subtitle format support
+- Enhanced analytics and caption quality metrics
 
-### Platform Configuration
+## Usage
 
-Platform-specific settings are set up in the `platformConfig` section of the buildspec file:
+Tutorial videos and screenshots - coming soon!
 
-* `bundleId`: macOS bundle identifier for the plugin. Should be unique and follow reverse domain name notation.
+## Download and Installation
 
-### Set Up Build Dependencies
+Check out the [latest releases](https://github.com/locaal-ai/obs-cloudvocal/releases) for downloads and install instructions.
 
-Just like OBS Studio itself, plugins need to be built using dependencies available either via the `obs-deps` repository (Windows and macOS) or via a distribution's package system (Linux).
+### Configuration
 
-#### Choose An OBS Studio Version
+1. Download and install the appropriate version for your operating system
+2. Configure your cloud provider credentials in the plugin settings
+3. Select your desired transcription and translation options
+4. Add CloudVocal as a filter to your audio source
 
-By default the plugin template specifies the most current official OBS Studio version in the `buildspec.json` file, which makes most sense for plugins at the start of development. As far as updating the targeted OBS Studio version is concerned, a few things need to be considered:
+## Building
 
-* Plugins targeting _older_ versions of OBS Studio should _generally_ also work in newer versions, with the exception of breaking changes to specific APIs which would also be explicitly called out in release notes
-* Plugins targeting the _latest_ version of OBS Studio might not work in older versions because the internal data structures used by `libobs` might not be compatible
-* Users are encouraged to always update to the most recent version of OBS Studio available within a reasonable time after release - plugin authors have to choose for themselves if they'd rather keep up with OBS Studio releases or stay with an older version as their baseline (which might of course preclude the plugin from using functionality introduced in a newer version)
+The plugin can be built on Windows, macOS, and Linux platforms. The build process is straightforward as all processing happens in the cloud.
 
-On Linux, the version used for development might be decided by the specific version available via a distribution's package management system, so OBS Studio compatibility for plugins might be determined by those versions instead.
+### Mac OSX
 
-#### Windows and macOS
+```sh
+$ MACOS_ARCH="x86_64" ./.github/scripts/build-macos -c Release
+```
 
-Windows and macOS dependency downloads are configured in the `buildspec.json` file:
+### Linux
 
-* `dependencies`:
-    * `obs-studio`: Version of OBS Studio to build plugin with (needed for `libobs` and `obs-frontend-api`)
-    * `prebuilt`: Prebuilt OBS Studio dependencies
-    * `qt6`: Prebuilt version of Qt6 as used by OBS Studio
-* `tools`: Contains additional build tools used by CI
+```sh
+$ sudo apt install -y libssl-dev
+$ ./.github/scripts/build-linux
+```
 
-The values should be kept in sync with OBS Studio releases and the `buildspec.json` file in use by the main project to ensure that the plugin is developed and built in sync with its target environment.
+### Windows
 
-To update a dependency, change the `version` and associated `hashes` entries to match the new version. The used hash algorithm is `sha256`.
+```powershell
+> .github/scripts/Build-Windows.ps1 -Configuration Release
+```
 
-#### Linux
-
-Linux dependencies need to be resolved using the package management tools appropriate for the local distribution. As an example, building on Ubuntu requires the following packages to be installed:
-
-* Build System Dependencies:
-    * `cmake`
-    * `ninja-build`
-    * `pkg-config`
-* Build Dependencies:
-    * `build-essential`
-    * `libobs-dev`
-* Qt6 Dependencies:
-    * `qt6-base-dev`
-    * `libqt6svg6-dev`
-    * `qt6-base-private-dev`
-
-## Build System Configuration
-
-To create a build configuration, `cmake` needs to be installed on the system. The plugin template supports CMake presets using the `CMakePresets.json` file and ships with default presets:
-
-* `macos`
-    * Universal architecture (supports Intel-based CPUs as Apple Silicon)
-    * Defaults to Qt version `6`
-    * Defaults to macOS deployment target `11.0`
-* `macos-ci`
-    * Inherits from `macos`
-    * Enables compile warnings as error
-* `windows-x64`
-    * Windows 64-bit architecture
-    * Defaults to Qt version `6`
-    * Defaults to Visual Studio 17 2022
-    * Defaults to Windows SDK version `10.0.18363.657`
-* `windows-ci-x64`
-    * Inherits from `windows-x64`
-    * Enables compile warnings as error
-* `linux-x86_64`
-    * Linux x86_64 architecture
-    * Defaults to Qt version `6`
-    * Defaults to Ninja as build tool
-    * Defaults to `RelWithDebInfo` build configuration
-* `linux-ci-x86_64`
-    * Inherits from `linux-x86_64`
-    * Enables compile warnings as error
-* `linux-aarch64`
-    * Provided as an experimental preview feature
-    * Linux aarch64 (ARM64) architecture
-    * Defaults to Qt version `6`
-    * Defaults to Ninja as build tool
-    * Defaults to `RelWithDebInfo` build configuration
-* `linux-ci-aarch64`
-    * Inherits from `linux-aarch64`
-    * Enables compile warnings as error
-
-Presets can be either specified on the command line (`cmake --preset <PRESET>`) or via the associated select field in the CMake Windows GUI. Only presets appropriate for the current build host are available for selection.
-
-Additional build system options are available to developers:
-
-* `ENABLE_CCACHE`: Enables support for compilation speed-ups via ccache (enabled by default on macOS and Linux)
-* `ENABLE_FRONTEND_API`: Adds OBS Frontend API support for interactions with OBS Studio frontend functionality (disabled by default)
-* `ENABLE_QT`: Adds Qt6 support for custom user interface elements (disabled by default)
-* `CODESIGN_IDENTITY`: Name of the Apple Developer certificate that should be used for code signing
-* `CODESIGN_TEAM`: Apple Developer team ID that should be used for code signing
-
-## GitHub Actions & CI
-
-Default GitHub Actions workflows are available for the following repository actions:
-
-* `push`: Run for commits or tags pushed to `master` or `main` branches.
-* `pr-pull`: Run when a Pull Request has been pushed or synchronized.
-* `dispatch`: Run when triggered by the workflow dispatch in GitHub's user interface.
-* `build-project`: Builds the actual project and is triggered by other workflows.
-* `check-format`: Checks CMake and plugin source code formatting and is triggered by other workflows.
-
-The workflows make use of GitHub repository actions (contained in `.github/actions`) and build scripts (contained in `.github/scripts`) which are not needed for local development, but might need to be adjusted if additional/different steps are required to build the plugin.
-
-### Retrieving build artifacts
-
-Successful builds on GitHub Actions will produce build artifacts that can be downloaded for testing. These artifacts are commonly simple archives and will not contain package installers or installation programs.
-
-### Building a Release
-
-To create a release, an appropriately named tag needs to be pushed to the `main`/`master` branch using semantic versioning (e.g., `12.3.4`, `23.4.5-beta2`). A draft release will be created on the associated repository with generated installer packages or installation programs attached as release artifacts.
-
-## Signing and Notarizing on macOS
-
-Plugins released for macOS should be codesigned and notarized with a valid Apple Developer ID for best user experience. To set this up, the private and personal key of a **paid Apple Developer ID** need to be downloaded from the Apple Developer portal:
-
-* On your Apple Developer dashboard, go to "Certificates, IDs & Profiles" and create two signing certificates:
-    * One of the "Developer ID Application" type. It will be used to sign the plugin's binaries
-    * One of the "Developer ID Installer" type. It will be used to sign the plugin's installer
-
-The developer certificate will usually carry a name similar in form to
-
-`Developer ID Application: <FIRSTNAME> <LASTNAME> (<LETTERS_AND_NUMBERS>)`
-
-This entire string should be specified as `CODESIGN_IDENTITY`, the `LETTERS_AND_NUMBERS` part as `CODESIGN_TEAM` to CMake to set up codesigning properly.
-
-### GitHub Actions Set Up
-
-To use code signing on GitHub Actions, the certificate and associated information need to be set up as _repository secrets_ in the GitHub repository's settings.
-
-* First, the locally stored developer certificate needs to be exported from the macOS keychain:
-    * Using the Keychain app on macOS, export these your certificates (Application and Installer) public _and_ private keys into a single .p12 file **protected with a strong password**
-    * Encode the .p12 file into its base64 representation by running `base64 <NAME_OF_YOUR_P12_FILE>`
-* Next, the certificate data and the password used to export it need to be set up as repository secrets:
-    * `MACOS_SIGNING_APPLICATION_IDENTITY`: Name of the "Developer ID Application" signing certificate
-    * `MACOS_SIGNING_INSTALLER_IDENTITY`: Name of "Developer ID Installer" signing certificate
-    * `MACOS_SIGNING_CERT`: The base64 encoded `.p12` file
-    * `MACOS_SIGNING_CERT_PASSWORD`: Password used to generate the .p12 certificate
-* To also enable notarization on GitHub Action runners, the following repository secrets are required:
-    * `MACOS_NOTARIZATION_USERNAME`: Your Apple Developer account's _Apple ID_
-    * `MACOS_NOTARIZATION_PASSWORD`: Your Apple Developer account's _generated app password_
+Check out our other plugins:
+- [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device transcription and translation
+- [Background Removal](https://github.com/locaal-ai/obs-backgroundremoval) for removing background from live portrait video
+- [Detect](https://github.com/locaal-ai/obs-detect) for real-time on-device object detection
+- [CleanStream](https://github.com/locaal-ai/obs-cleanstream) for real-time profanity filter
+- [URL/API Source](https://github.com/locaal-ai/obs-urlsource) for real-time data integrations
+- [Squawk](https://github.com/locaal-ai/obs-squawk) for real-time on-device speech generation (text-to-speech)

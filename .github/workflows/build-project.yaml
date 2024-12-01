@@ -118,15 +118,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-ccache-
 
-      - uses: actions/cache@v4
-        id: bazel-cache
-        if: always()
-        with:
-          path: /Users/runner/.cache/bazel
-          key: ${{ runner.os }}-bazel-${{ needs.check-event.outputs.config }}
-          restore-keys: |
-            ${{ runner.os }}-bazel-
-
       - name: Set Up Codesigning 🔑
         uses: ./.github/actions/setup-macos-codesigning
         if: fromJSON(needs.check-event.outputs.codesign)
