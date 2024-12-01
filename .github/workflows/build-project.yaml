@@ -74,7 +74,6 @@ jobs:
   macos-build:
     name: Build for macOS 🍏
     runs-on: macos-14
-    if: false
     needs: check-event
     defaults:
       run:
