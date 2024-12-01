@@ -120,7 +120,6 @@ void ClovaProvider::readResultsFromTranscription()
 	// Read the response from Clova
 	NestResponse response;
 	while (reader_writer->Read(&response)) {
-		auto end_time = std::chrono::steady_clock::now();
 		json json_response_data = json::parse(response.contents());
 		if (json_response_data.contains("transcription") &&
 		    json_response_data["transcription"].contains("text")) {

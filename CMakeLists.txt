@@ -63,7 +63,8 @@ target_sources(
           src/cloudvocal-properties.cpp
           src/language-codes/language-codes.cpp
           src/cloud-providers/cloud-provider.cpp
-          src/cloud-providers/clova/clova-provider.cpp)
+          src/cloud-providers/clova/clova-provider.cpp
+          src/cloud-providers/google/google-provider.cpp)
 
 add_subdirectory(src/cloud-translation)
 
