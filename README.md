@@ -70,7 +70,7 @@ The plugin can be built on Windows, macOS, and Linux platforms. The build proces
 ### Mac OSX
 
 ```sh
-$ MACOS_ARCH="x86_64" ./.github/scripts/build-macos -c Release
+$ ./.github/scripts/build-macos -c Release
 ```
 
 ### Linux
