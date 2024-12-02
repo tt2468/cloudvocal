@@ -57,7 +57,7 @@ runs:
         : Build gRPC 🛠️
         echo ::group::Build gRPC
         conan profile detect
-        conan install ${{github.workspace}} --output-folder=${{github.workspace}}/build_conan
+        conan install ${{github.workspace}} --output-folder=${{github.workspace}}/build_conan --build=missing
         echo ::endgroup::
 
     - name: Run macOS Build
