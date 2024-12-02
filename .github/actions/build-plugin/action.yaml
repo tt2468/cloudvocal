@@ -23,6 +23,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Install Python 🐍
+      uses: actions/setup-python@v5
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      with:
+        python-version: '3.10' 
+
     - name: Install Conan 🪓
       if: runner.os == 'Linux' || runner.os == 'macOS'
       id: conan
@@ -50,7 +56,7 @@ runs:
       run: |
         : Build gRPC 🛠️
         echo ::group::Build gRPC
-        conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build
+        conan install . -s build_type=${{env.BUILD_TYPE}} --output-folder=${{github.workspace}}/build_conan
         echo ::endgroup::
 
     - name: Run macOS Build
