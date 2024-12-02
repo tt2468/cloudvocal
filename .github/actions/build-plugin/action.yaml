@@ -30,6 +30,7 @@ runs:
 
     - name: Conan version
       if: runner.os == 'Linux' || runner.os == 'macOS'
+      shell: bash
       run: echo "${{ steps.conan.outputs.version }}"
 
     - name: Install Dependencies 🛍️
