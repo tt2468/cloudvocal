@@ -56,6 +56,7 @@ runs:
       run: |
         : Build gRPC 🛠️
         echo ::group::Build gRPC
+        conan profile detect
         conan install . -s build_type=${{env.BUILD_TYPE}} --output-folder=${{github.workspace}}/build_conan
         echo ::endgroup::
 
