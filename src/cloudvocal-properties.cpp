@@ -281,8 +281,8 @@ void add_general_group_properties(obs_properties_t *ppts)
 	// add the available cloud providers: Clova
 	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Clova"),
 				     "clova");
-	// obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
-	// 			     "google");
+	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
+				     "google");
 
 	obs_property_t *subs_output =
 		obs_properties_add_list(general_group, "subtitle_sources", MT_("subtitle_sources"),
@@ -350,7 +350,7 @@ obs_properties_t *cloudvocal_properties(void *data)
 	std::string version_str = PLUGIN_VERSION;
 	size_t pos = template_out.find("{{plugin_version}}");
 	if (pos != std::string::npos) {
-		template_out = template_out.replace(pos, 17, version_str).c_str();
+		template_out = template_out.replace(pos, 18, version_str).c_str();
 	}
 	obs_properties_add_text(ppts, "info", template_out.c_str(), OBS_TEXT_INFO);
 

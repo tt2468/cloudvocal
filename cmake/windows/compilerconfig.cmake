@@ -31,6 +31,7 @@ endif()
 add_compile_options(
   /W3
   /utf-8
+  /wd4267
   "$<$<COMPILE_LANG_AND_ID:C,MSVC>:/MP>"
   "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/MP>"
   "$<$<COMPILE_LANG_AND_ID:C,Clang>:${_obs_clang_c_options}>"

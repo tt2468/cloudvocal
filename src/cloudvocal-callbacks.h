@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <obs-frontend-api.h>
+
 #include "cloudvocal-data.h"
 
 void send_caption_to_source(const std::string &target_source_name, const std::string &str_copy,

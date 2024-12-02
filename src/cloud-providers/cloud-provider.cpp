@@ -1,6 +1,7 @@
 #include "cloud-provider.h"
 #include "cloudvocal-callbacks.h"
 #include "clova/clova-provider.h"
+#include "google/google-provider.h"
 
 std::shared_ptr<CloudProvider> createCloudProvider(const std::string &providerType,
 						   CloudProvider::TranscriptionCallback callback,
@@ -8,11 +9,9 @@ std::shared_ptr<CloudProvider> createCloudProvider(const std::string &providerTy
 {
 	if (providerType == "clova") {
 		return std::make_shared<ClovaProvider>(callback, gf);
+	} else if (providerType == "google") {
+		return std::make_unique<GoogleProvider>(callback, gf);
 	}
-	// Add more providers as needed
-	// else if (providerType == "AnotherCloudProvider") {
-	//     return std::make_unique<AnotherCloudProvider>(callback, gf);
-	// }
 
 	return nullptr; // Return nullptr if no matching provider is found
 }

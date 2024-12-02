@@ -3,7 +3,6 @@
 #endif
 
 #include <obs.h>
-#include <obs-frontend-api.h>
 
 #include <curl/curl.h>
 

@@ -254,3 +254,25 @@ std::map<std::string, std::string> language_codes_from_underscore = {
 	{"__tn__", "tn"},   {"__tr__", "tr"}, {"__uk__", "uk"}, {"__ur__", "ur"},
 	{"__uz__", "uz"},   {"__vi__", "vi"}, {"__wo__", "wo"}, {"__xh__", "xh"},
 	{"__yi__", "yi"},   {"__yo__", "yo"}, {"__zh__", "zh"}, {"__zu__", "zu"}};
+
+std::map<std::string, std::string> language_codes_to_locale = {
+	{"af", "af-ZA"}, {"am", "am-ET"}, {"ar", "ar-SA"},   {"ast", "ast-ES"}, {"az", "az-AZ"},
+	{"ba", "ba-RU"}, {"be", "be-BY"}, {"bg", "bg-BG"},   {"bn", "bn-IN"},   {"br", "br-FR"},
+	{"bs", "bs-BA"}, {"ca", "ca-ES"}, {"ceb", "ceb-PH"}, {"cs", "cs-CZ"},   {"cy", "cy-GB"},
+	{"da", "da-DK"}, {"de", "de-DE"}, {"el", "el-GR"},   {"en", "en-US"},   {"es", "es-ES"},
+	{"et", "et-EE"}, {"fa", "fa-IR"}, {"ff", "ff-SN"},   {"fi", "fi-FI"},   {"fr", "fr-FR"},
+	{"fy", "fy-NL"}, {"ga", "ga-IE"}, {"gd", "gd-GB"},   {"gl", "gl-ES"},   {"gu", "gu-IN"},
+	{"ha", "ha-NG"}, {"he", "he-IL"}, {"hi", "hi-IN"},   {"hr", "hr-HR"},   {"ht", "ht-HT"},
+	{"hu", "hu-HU"}, {"hy", "hy-AM"}, {"id", "id-ID"},   {"ig", "ig-NG"},   {"ilo", "ilo-PH"},
+	{"is", "is-IS"}, {"it", "it-IT"}, {"ja", "ja-JP"},   {"jv", "jv-ID"},   {"ka", "ka-GE"},
+	{"kk", "kk-KZ"}, {"km", "km-KH"}, {"kn", "kn-IN"},   {"ko", "ko-KR"},   {"lb", "lb-LU"},
+	{"lg", "lg-UG"}, {"ln", "ln-CD"}, {"lo", "lo-LA"},   {"lt", "lt-LT"},   {"lv", "lv-LV"},
+	{"mg", "mg-MG"}, {"mk", "mk-MK"}, {"ml", "ml-IN"},   {"mn", "mn-MN"},   {"mr", "mr-IN"},
+	{"ms", "ms-MY"}, {"my", "my-MM"}, {"ne", "ne-NP"},   {"nl", "nl-NL"},   {"no", "no-NO"},
+	{"ns", "ns-ZA"}, {"oc", "oc-FR"}, {"or", "or-IN"},   {"pa", "pa-IN"},   {"pl", "pl-PL"},
+	{"ps", "ps-AF"}, {"pt", "pt-PT"}, {"ro", "ro-RO"},   {"ru", "ru-RU"},   {"sd", "sd-PK"},
+	{"si", "si-LK"}, {"sk", "sk-SK"}, {"sl", "sl-SI"},   {"so", "so-SO"},   {"sq", "sq-AL"},
+	{"sr", "sr-RS"}, {"ss", "ss-SZ"}, {"su", "su-ID"},   {"sv", "sv-SE"},   {"sw", "sw-KE"},
+	{"ta", "ta-IN"}, {"th", "th-TH"}, {"tl", "tl-PH"},   {"tn", "tn-ZA"},   {"tr", "tr-TR"},
+	{"uk", "uk-UA"}, {"ur", "ur-PK"}, {"uz", "uz-UZ"},   {"vi", "vi-VN"},   {"wo", "wo-SN"},
+	{"xh", "xh-ZA"}, {"yi", "yi-IL"}, {"yo", "yo-NG"},   {"zh", "zh-CN"},   {"zu", "zu-ZA"}};

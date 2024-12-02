@@ -28,19 +28,21 @@ public:
 	void start()
 	{
 		running = true;
+		stop_requested = false;
 		transcription_thread = std::thread(&CloudProvider::processAudio, this);
 		results_thread = std::thread(&CloudProvider::processResults, this);
 	}
 
 	void stop()
 	{
-		running = false;
+		stop_requested = true;
 		if (transcription_thread.joinable()) {
 			transcription_thread.join();
 		}
 		if (results_thread.joinable()) {
 			results_thread.join();
 		}
+		running = false;
 	}
 
 	bool isRunning() const { return running; }
@@ -62,7 +64,7 @@ protected:
 		uint64_t start_timestamp_offset_ns = 0;
 		uint64_t end_timestamp_offset_ns = 0;
 
-		while (running) {
+		while (running && !stop_requested) {
 			get_data_from_buf_and_resample(gf, start_timestamp_offset_ns,
 						       end_timestamp_offset_ns);
 
@@ -79,23 +81,30 @@ protected:
 			// wait for notificaiton from the audio buffer condition variable
 			std::unique_lock<std::mutex> lock(gf->input_buffers_mutex);
 			gf->input_buffers_cv.wait(lock, [this] {
-				return !(gf->input_buffers[0]).empty() || !running;
+				return !(gf->input_buffers[0]).empty() || !running ||
+				       stop_requested;
 			});
 		}
 
 		// Shutdown the cloud provider
 		shutdown();
+
+		obs_log(gf->log_level, "Cloud provider audio thread stopped");
+		this->running = false;
 	}
 
 	void processResults()
 	{
-		while (running) {
+		while (running && !stop_requested) {
 			readResultsFromTranscription();
 		}
+
+		obs_log(gf->log_level, "Cloud provider results thread stopped");
 	}
 
 	cloudvocal_data *gf;
 	std::atomic<bool> running;
+	std::atomic<bool> stop_requested;
 	TranscriptionCallback transcription_callback;
 
 private:
