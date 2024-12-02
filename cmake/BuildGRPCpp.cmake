@@ -22,24 +22,14 @@ if(WIN32)
   set(GRPC_LIBRARIES
       ${GRPC_LIBRARIES}
       CACHE STRING "gRPC libraries")
-elseif(UNIX AND NOT APPLE)
-  if(NOT DEFINED ENV{PROTOC_EXECUTABLE} OR NOT DEFINED ENV{GRPC_PLUGIN_EXECUTABLE})
-    message(FATAL_ERROR "PROTOC_EXECUTABLE and GRPC_PLUGIN_EXECUTABLE environment variables not set")
-  endif()
-
-  # make sure the protoc and grpc_cpp_plugin are found
-  set(PROTOC_EXECUTABLE $ENV{PROTOC_EXECUTABLE})
-  set(GRPC_PLUGIN_EXECUTABLE $ENV{GRPC_PLUGIN_EXECUTABLE})
-  set(GRPC_INCLUDE_DIR $ENV{GRPC_INCLUDE_DIR})
-
-  # # get all .a files in the lib directory file(GLOB GRPC_LIBRARIES "$ENV{GRPC_BUILD_DIR}/*.a") set(GRPC_LIBRARIES
-  # ${GRPC_LIBRARIES} CACHE STRING "gRPC libraries")
 else()
-  # find grpc through homebrew
+  # get grpc from conan
+  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
+  find_package(gRPC CONFIG REQUIRED)
   find_program(PROTOC_EXECUTABLE NAMES protoc REQUIRED)
   find_program(GRPC_PLUGIN_EXECUTABLE NAMES grpc_cpp_plugin REQUIRED)
-  find_path(GRPC_INCLUDE_DIR NAMES grpc/grpc.h)
-  find_library(GRPC_LIBRARIES NAMES grpc)
+  find_path(GRPC_INCLUDE_DIR NAMES grpc/grpc.h REQUIRED)
+  find_library(GRPC_LIBRARIES NAMES grpc REQUIRED)
 endif()
 
 message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")
