@@ -23,6 +23,15 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Install Conan 🪓
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      id: conan
+      uses: turtlebrowser/get-conan@main
+
+    - name: Conan version
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      run: echo "${{ steps.conan.outputs.version }}"
+
     - name: Install Dependencies 🛍️
       if: runner.os == 'Linux'
       shell: bash
@@ -35,20 +44,12 @@ runs:
         echo ::endgroup::
 
     - name: Build gRPC 🛠️
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' || runner.os == 'macOS'
       shell: bash
       run: |
         : Build gRPC 🛠️
         echo ::group::Build gRPC
-        git clone https://github.com/grpc/grpc.git --depth 1
-        cd grpc
-        git submodule update --init
-        bazel build --compilation_mode=opt @com_github_grpc_grpc//:grpc++ @com_google_protobuf//:protoc @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin
-        
-        echo "PROTOC_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_google_protobuf//:protoc 2>/dev/null | grep "protoc$" | sed 's/fastbuild/opt/g'))" >> $GITHUB_ENV
-        echo "GRPC_PLUGIN_EXECUTABLE=$(realpath $(bazel cquery --output=files @com_github_grpc_grpc//src/compiler:grpc_cpp_plugin 2>/dev/null | sed 's/fastbuild/opt/g'))" >> $GITHUB_ENV
-        echo "GRPC_INCLUDE_DIR=$(realpath $(pwd)/include)" >> $GITHUB_ENV
-
+        conan install . -s build_type=${{env.BUILD_TYPE}} --install-folder=${{github.workspace}}/build
         echo ::endgroup::
 
     - name: Run macOS Build
