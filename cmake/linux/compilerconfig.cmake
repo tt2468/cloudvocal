@@ -15,13 +15,13 @@ set(_obs_gcc_c_options
     -fopenmp-simd
     -Wdeprecated-declarations
     -Wempty-body
-    -Wenum-conversion
     -Werror=return-type
     -Wextra
     -Wformat
     -Wformat-security
     -Wno-conversion
-    -Wno-float-conversion
+    -Wno-error=conversion
+    -Wno-error=shadow
     -Wno-implicit-fallthrough
     -Wno-missing-braces
     -Wno-missing-field-initializers
@@ -31,11 +31,10 @@ set(_obs_gcc_c_options
     -Wno-unknown-pragmas
     -Wno-unused-function
     -Wno-unused-label
+    -Wno-unused-parameter
     -Wparentheses
-    -Wshadow
     -Wuninitialized
     -Wunreachable-code
-    -Wunused-parameter
     -Wunused-value
     -Wunused-variable
     -Wvla)

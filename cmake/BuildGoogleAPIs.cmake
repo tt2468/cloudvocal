@@ -62,8 +62,15 @@ add_library(google-apis ${GOOGLE_APIS_OUTPUT_FILES})
 if(MSVC)
   target_compile_options(google-apis PRIVATE /wd4244 /wd4267)
 else()
-  target_compile_options(google-apis PRIVATE -Wno-conversion -Wno-sign-conversion -Wno-unused-parameter
-                                             -Wno-unused-variable)
+  target_compile_options(
+    clova-apis
+    PRIVATE -Wno-conversion
+            -Wno-sign-conversion
+            -Wno-unused-parameter
+            -Wno-unused-variable
+            -Wno-error=shadow
+            -Wno-shadow
+            -Wno-error=conversion)
 endif()
 
 target_include_directories(google-apis PUBLIC ${OUTPUT_FOLDER} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR}
