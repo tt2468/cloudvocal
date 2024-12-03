@@ -23,7 +23,7 @@ else()
 endif()
 
 # Add include directories
-target_include_directories(clova-apis PUBLIC ${CLOVA_OUTPUT_DIR} ${GRPC_INCLUDE_DIR})
+target_include_directories(clova-apis PUBLIC ${CLOVA_OUTPUT_DIR} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR})
 
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE clova-apis)

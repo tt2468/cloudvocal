@@ -66,7 +66,7 @@ else()
                                              -Wno-unused-variable)
 endif()
 
-target_include_directories(google-apis PUBLIC ${OUTPUT_FOLDER} ${GRPC_INCLUDE_DIR})
+target_include_directories(google-apis PUBLIC ${OUTPUT_FOLDER} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR})
 
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE google-apis)
