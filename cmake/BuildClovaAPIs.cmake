@@ -34,5 +34,9 @@ endif()
 target_include_directories(clova-apis PUBLIC ${CLOVA_OUTPUT_DIR} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR}
                                              ${absl_INCLUDE_DIRS})
 
+# link the grpc libraries
+target_link_libraries(clova-apis PRIVATE ${GRPC_LIBRARIES})
+target_link_directories(clova-apis PRIVATE ${GRPC_LIB_DIR})
+
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE clova-apis)

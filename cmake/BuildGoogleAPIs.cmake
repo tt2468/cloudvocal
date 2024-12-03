@@ -77,5 +77,9 @@ endif()
 target_include_directories(google-apis PUBLIC ${OUTPUT_FOLDER} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR}
                                               ${absl_INCLUDE_DIRS})
 
+# link the grpc libraries
+target_link_libraries(google-apis PRIVATE ${GRPC_LIBRARIES})
+target_link_directories(google-apis PRIVATE ${GRPC_LIB_DIR})
+
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE google-apis)
