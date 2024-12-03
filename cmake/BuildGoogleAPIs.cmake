@@ -63,8 +63,9 @@ if(MSVC)
   target_compile_options(google-apis PRIVATE /wd4244 /wd4267)
 else()
   target_compile_options(
-    clova-apis
-    PRIVATE -Wno-conversion
+    google-apis
+    PRIVATE -fPIC
+            -Wno-conversion
             -Wno-sign-conversion
             -Wno-unused-parameter
             -Wno-unused-variable

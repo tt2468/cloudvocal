@@ -20,7 +20,8 @@ if(MSVC)
 else()
   target_compile_options(
     clova-apis
-    PRIVATE -Wno-conversion
+    PRIVATE -fPIC
+            -Wno-conversion
             -Wno-sign-conversion
             -Wno-unused-parameter
             -Wno-unused-variable
