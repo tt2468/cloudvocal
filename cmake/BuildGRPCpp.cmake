@@ -28,6 +28,7 @@ else()
   list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
   find_package(gRPC CONFIG REQUIRED)
   find_package(protobuf CONFIG REQUIRED)
+  find_package(absl CONFIG REQUIRED)
 
   set(PROTOC_EXECUTABLE
       ${Protobuf_PROTOC_EXECUTABLE}

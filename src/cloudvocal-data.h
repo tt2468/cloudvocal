@@ -3,6 +3,8 @@
 #include <string>
 #include <map>
 #include <mutex>
+#include <condition_variable>
+#include <memory>
 #include <deque>
 #include <obs-module.h>
 #include <media-io/audio-resampler.h>
