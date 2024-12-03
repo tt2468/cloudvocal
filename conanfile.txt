@@ -1,6 +1,6 @@
 [requires]
 grpc/1.67.1
+protobuf/5.27.0
 
 [generators]
 CMakeDeps
-CMakeToolchain

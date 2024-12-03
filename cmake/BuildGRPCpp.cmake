@@ -26,10 +26,23 @@ else()
   # get grpc from conan
   list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
   find_package(gRPC CONFIG REQUIRED)
-  find_program(PROTOC_EXECUTABLE NAMES protoc REQUIRED)
-  find_program(GRPC_PLUGIN_EXECUTABLE NAMES grpc_cpp_plugin REQUIRED)
-  find_path(GRPC_INCLUDE_DIR NAMES grpc/grpc.h REQUIRED)
-  find_library(GRPC_LIBRARIES NAMES grpc REQUIRED)
+  find_package(protobuf CONFIG REQUIRED)
+
+  set(PROTOC_EXECUTABLE
+      ${Protobuf_PROTOC_EXECUTABLE}
+      CACHE STRING "protoc executable")
+  set(GRPC_PLUGIN_EXECUTABLE
+      ${GRPC_CPP_PLUGIN_PROGRAM}
+      CACHE STRING "gRPC plugin executable")
+  set(GRPC_LIBRARIES
+      ${gRPC_LIBRARIES}
+      CACHE STRING "gRPC libraries")
+  set(GRPC_LIB_DIR
+      ${grpc_LIB_DIRS_RELEASE}
+      CACHE STRING "gRPC library directory")
+  set(GRPC_INCLUDE_DIR
+      "${gRPC_INCLUDE_DIRS} ${protobuf_INCLUDE_DIRS}"
+      CACHE STRING "gRPC include directory")
 endif()
 
 message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")

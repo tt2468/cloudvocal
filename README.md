@@ -59,9 +59,10 @@ Check out the [latest releases](https://github.com/locaal-ai/obs-cloudvocal/rele
 ### Configuration
 
 1. Download and install the appropriate version for your operating system
-2. Configure your cloud provider credentials in the plugin settings
-3. Select your desired transcription and translation options
-4. Add CloudVocal as a filter to your audio source
+1. Add CloudVocal as a filter to your audio source
+1. Configure your cloud provider credentials in the plugin settings
+1. Select your desired transcription and translation options
+1. Select an output text source for the captions and translations, send the captions to the stream or a file
 
 ## Building
 
@@ -86,8 +87,14 @@ $ ./.github/scripts/build-linux
 > .github/scripts/Build-Windows.ps1 -Configuration Release
 ```
 
+If you're developing the plugin, I find this command to be useful for direct deploymet into OBS after building:
+
+```powershell
+> .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
+```
+
 Check out our other plugins:
-- [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device transcription and translation
+- [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device real-time transcription and translation
 - [Background Removal](https://github.com/locaal-ai/obs-backgroundremoval) for removing background from live portrait video
 - [Detect](https://github.com/locaal-ai/obs-detect) for real-time on-device object detection
 - [CleanStream](https://github.com/locaal-ai/obs-cleanstream) for real-time profanity filter
