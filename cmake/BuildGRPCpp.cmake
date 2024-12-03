@@ -13,6 +13,7 @@ if(WIN32)
 
   # Specify include directories and link libraries for your project
   set(GRPC_INCLUDE_DIR ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include)
+  set(PROTOBUF_INCLUDE_DIR ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include)
   set(GRPC_LIB_DIR ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib)
   set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/protoc.exe)
   set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/grpc_cpp_plugin.exe)
@@ -41,11 +42,15 @@ else()
       ${grpc_LIB_DIRS_RELEASE}
       CACHE STRING "gRPC library directory")
   set(GRPC_INCLUDE_DIR
-      "${gRPC_INCLUDE_DIRS} ${protobuf_INCLUDE_DIRS}"
+      ${gRPC_INCLUDE_DIRS}
       CACHE STRING "gRPC include directory")
+  set(PROTOBUF_INCLUDE_DIR
+      ${protobuf_INCLUDE_DIRS}
+      CACHE STRING "Protobuf include directory")
 endif()
 
 message(STATUS "gRPC include directory: ${GRPC_INCLUDE_DIR}")
+message(STATUS "protobuf include directory: ${PROTOBUF_INCLUDE_DIR}")
 message(STATUS "gRPC library directory: ${GRPC_LIB_DIR}")
 message(STATUS "protoc executable: ${PROTOC_EXECUTABLE}")
 message(STATUS "grpc_cpp_plugin executable: ${GRPC_PLUGIN_EXECUTABLE}")
@@ -55,7 +60,10 @@ if(NOT PROTOC_EXECUTABLE OR NOT GRPC_PLUGIN_EXECUTABLE)
 endif()
 
 # Add include directories
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${GRPC_INCLUDE_DIR})
+target_include_directories(
+  ${CMAKE_PROJECT_NAME}
+  PRIVATE ${GRPC_INCLUDE_DIR}
+  PRIVATE ${PROTOBUF_INCLUDE_DIR})
 
 # Link libraries
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE ${GRPC_LIB_DIR})
