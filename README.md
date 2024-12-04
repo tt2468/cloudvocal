@@ -2,17 +2,17 @@
 
 <div align="center">
 
-[![GitHub](https://img.shields.io/github/license/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/blob/main/LICENSE)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/locaal-ai/obs-cloudvocal/push.yaml)](https://github.com/locaal-ai/obs-cloudvocal/actions/workflows/push.yaml)
-[![Total downloads](https://img.shields.io/github/downloads/locaal-ai/obs-cloudvocal/total)](https://github.com/locaal-ai/obs-cloudvocal/releases)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/releases)
-[![GitHub stars](https://badgen.net/github/stars/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/stargazers/)
+[![GitHub](https://img.shields.io/github/license/locaal-ai/cloudvocal)](https://github.com/locaal-ai/cloudvocal/blob/main/LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/locaal-ai/cloudvocal/push.yaml)](https://github.com/locaal-ai/cloudvocal/actions/workflows/push.yaml)
+[![Total downloads](https://img.shields.io/github/downloads/locaal-ai/cloudvocal/total)](https://github.com/locaal-ai/cloudvocal/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/locaal-ai/cloudvocal)](https://github.com/locaal-ai/cloudvocal/releases)
+[![GitHub stars](https://badgen.net/github/stars/locaal-ai/cloudvocal)](https://github.com/locaal-ai/cloudvocal/stargazers/)
 [![Discord](https://img.shields.io/discord/1200229425141252116)](https://discord.gg/KbjGU2vvUz)
 <br/>
 Download:</br>
-<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
-<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
-<a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
 </div>
 
 ## Introduction
@@ -52,7 +52,7 @@ Tutorial videos and screenshots - coming soon!
 
 ## Download and Installation
 
-Check out the [latest releases](https://github.com/locaal-ai/obs-cloudvocal/releases) for downloads and install instructions.
+Check out the [latest releases](https://github.com/locaal-ai/cloudvocal/releases) for downloads and install instructions.
 
 ### Configuration
 
