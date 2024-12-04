@@ -231,6 +231,16 @@ void cloudvocal_update(void *data, obs_data_t *s)
 		restart_cloud_provider(gf);
 	}
 
+	// Update timed metadata options
+	gf->send_timed_metadata = obs_data_get_bool(s, "timed_metadata_group");
+	gf->timed_metadata_config.aws_access_key =
+		obs_data_get_string(s, "timed_metadata_aws_access_key");
+	gf->timed_metadata_config.aws_secret_key =
+		obs_data_get_string(s, "timed_metadata_aws_secret_key");
+	gf->timed_metadata_config.ivs_channel_arn =
+		obs_data_get_string(s, "timed_metadata_channel_arn");
+	gf->timed_metadata_config.aws_region = obs_data_get_string(s, "timed_metadata_aws_region");
+
 	if (gf->context != nullptr && (obs_source_enabled(gf->context) || gf->initial_creation)) {
 		if (gf->initial_creation) {
 			obs_log(LOG_INFO, "Initial filter creation and source enabled");

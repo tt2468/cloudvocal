@@ -2,6 +2,7 @@
 grpc/1.67.1
 protobuf/5.27.0
 abseil/20240116.2
+openssl/3.3.2
 
 [generators]
 CMakeDeps
