@@ -18,9 +18,15 @@ bool ClovaProvider::init()
 {
 	// Initialize the Clova provider
 	obs_log(gf->log_level, "Initializing Clova provider");
+
 	// Add your initialization code here
 	chunk_id = 1;
 	initialized = false;
+
+	if (gf->cloud_provider_api_key.empty()) {
+		obs_log(LOG_ERROR, "Clova API key is empty");
+		return false;
+	}
 
 	grpc::SslCredentialsOptions ssl_opts;
 	this->channel = grpc::CreateChannel("clovaspeech-gw.ncloud.com:50051",
