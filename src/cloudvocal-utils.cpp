@@ -6,7 +6,7 @@
 
 void create_obs_text_source_if_needed()
 {
-	// check if a source called "LocalVocal Subtitles" exists
+	// check if a source called "CloudVocal Subtitles" exists
 	obs_source_t *source = obs_get_source_by_name("CloudVocal Subtitles");
 	if (source) {
 		// source already exists, release it
@@ -14,13 +14,13 @@ void create_obs_text_source_if_needed()
 		return;
 	}
 
-	// create a new OBS text source called "LocalVocal Subtitles"
+	// create a new OBS text source called "CloudVocal Subtitles"
 	obs_source_t *scene_as_source = obs_frontend_get_current_scene();
 	obs_scene_t *scene = obs_scene_from_source(scene_as_source);
 #ifdef _WIN32
 	source = obs_source_create("text_gdiplus_v3", "CloudVocal Subtitles", nullptr, nullptr);
 #else
-	source = obs_source_create("text_ft2_source_v2", "LocalVocal Subtitles", nullptr, nullptr);
+	source = obs_source_create("text_ft2_source_v2", "CloudVocal Subtitles", nullptr, nullptr);
 #endif
 	if (source) {
 		// add source to the current scene

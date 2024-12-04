@@ -6,7 +6,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/locaal-ai/obs-cloudvocal/push.yaml)](https://github.com/locaal-ai/obs-cloudvocal/actions/workflows/push.yaml)
 [![Total downloads](https://img.shields.io/github/downloads/locaal-ai/obs-cloudvocal/total)](https://github.com/locaal-ai/obs-cloudvocal/releases)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/releases)
-[![GitHub stars](https://badgen.net/github/stars/locaal-ai/obs-cloudvocal)](https://GitHub.com/locaal-ai/obs-cloudvocal/stargazers/)
+[![GitHub stars](https://badgen.net/github/stars/locaal-ai/obs-cloudvocal)](https://github.com/locaal-ai/obs-cloudvocal/stargazers/)
 [![Discord](https://img.shields.io/discord/1200229425141252116)](https://discord.gg/KbjGU2vvUz)
 <br/>
 Download:</br>
