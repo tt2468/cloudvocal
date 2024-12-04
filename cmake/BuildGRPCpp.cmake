@@ -29,6 +29,10 @@ else()
   find_package(gRPC CONFIG REQUIRED)
   find_package(protobuf CONFIG REQUIRED)
   find_package(absl CONFIG REQUIRED)
+  find_package(ZLIB REQUIRED)
+  find_package(OpenSSL REQUIRED)
+  find_package(c-ares CONFIG REQUIRED)
+  find_package(re2 CONFIG REQUIRED)
 
   set(PROTOC_EXECUTABLE
       ${Protobuf_PROTOC_EXECUTABLE}
@@ -36,12 +40,26 @@ else()
   set(GRPC_PLUGIN_EXECUTABLE
       ${GRPC_CPP_PLUGIN_PROGRAM}
       CACHE STRING "gRPC plugin executable")
-  set(GRPC_LIBRARIES
-      ${gRPC_LIBRARIES}
-      CACHE STRING "gRPC libraries")
-  set(GRPC_LIB_DIR
-      ${grpc_LIB_DIRS_RELEASE}
-      CACHE STRING "gRPC library directory")
+  list(
+    APPEND
+    GRPC_LIBRARIES
+    ${grpc_LIBS_RELEASE}
+    ${abseil_LIBS_RELEASE}
+    ${protobuf_LIBS_RELEASE}
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
+    ${c-ares_LIBS_RELEASE}
+    ${re2_LIBS_RELEASE})
+  list(
+    APPEND
+    GRPC_LIB_DIR
+    ${grpc_LIB_DIRS_RELEASE}
+    ${abseil_LIB_DIRS_RELEASE}
+    ${protobuf_LIB_DIRS_RELEASE}
+    ${zlib_LIB_DIRS_RELEASE}
+    ${openssl_LIB_DIRS_RELEASE}
+    ${c-ares_LIB_DIRS_RELEASE}
+    ${re2_LIB_DIRS_RELEASE})
   set(GRPC_INCLUDE_DIR
       ${gRPC_INCLUDE_DIRS}
       CACHE STRING "gRPC include directory")
