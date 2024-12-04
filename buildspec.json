@@ -33,11 +33,11 @@
     },
     "platformConfig": {
         "macos": {
-            "bundleId": "com.royshilkrot.obs-cloudvocal"
+            "bundleId": "com.royshilkrot.cloudvocal"
         }
     },
-    "name": "obs-cloudvocal",
-    "displayName": "Realtime Professional-Grade Cloud Transcription and Translation for OBS",
+    "name": "cloudvocal",
+    "displayName": "Realtime Professional-Grade Cloud Transcription and Translation Plugin",
     "version": "0.0.1",
     "author": "Roy Shilkrot",
     "website": "https://locaal.ai",

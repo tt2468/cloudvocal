@@ -1,5 +1,5 @@
 /*
-obs-cloudvocal
+cloudvocal
 Copyright (C) 2024 Roy Shilkrot roy.shil@gmail.com
 
 This program is free software; you can redistribute it and/or modify
