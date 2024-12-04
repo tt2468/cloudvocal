@@ -10,9 +10,9 @@
 [![Discord](https://img.shields.io/discord/1200229425141252116)](https://discord.gg/KbjGU2vvUz)
 <br/>
 Download:</br>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-macos-universal.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
 </div>
 
 ## Introduction

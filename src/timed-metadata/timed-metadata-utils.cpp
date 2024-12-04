@@ -2,6 +2,8 @@
 #include "plugin-support.h"
 #include "timed-metadata-utils.h"
 
+#define OPENSSL_NO_DEPRECATED 1
+
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 #include <openssl/hmac.h>
@@ -36,10 +38,11 @@ std::string hmacSha256(const std::string &key, const std::string &data, bool isH
 			unsigned char byte = (unsigned char)strtol(byteString.c_str(), NULL, 16);
 			hexKey.push_back(byte);
 		}
-		pkey = EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, NULL, hexKey.data(), (int)hexKey.size());
+		pkey = EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, NULL, hexKey.data(),
+						    (int)hexKey.size());
 	} else {
-		pkey = EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, NULL, (unsigned char *)key.c_str(),
-					    (int)key.length());
+		pkey = EVP_PKEY_new_raw_private_key(
+			EVP_PKEY_HMAC, NULL, (unsigned char *)key.c_str(), (int)key.length());
 	}
 
 	EVP_MD_CTX *ctx = EVP_MD_CTX_new();
