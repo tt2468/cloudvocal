@@ -1,4 +1,4 @@
-# CloudVocal - Professional Cloud AI Transcription & Translation for OBS
+# CloudVocal - Professional Cloud AI Transcription & Translation Plugin
 
 <div align="center">
 
