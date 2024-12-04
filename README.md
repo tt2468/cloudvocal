@@ -11,10 +11,8 @@
 <br/>
 Download:</br>
 <a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
-<!--
 <a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
 <a href="https://github.com/locaal-ai/obs-cloudvocal/releases/latest/download/obs-cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
--->
 </div>
 
 ## Introduction
@@ -68,16 +66,21 @@ Check out the [latest releases](https://github.com/locaal-ai/obs-cloudvocal/rele
 
 The plugin can be built on Windows, macOS, and Linux platforms. The build process is straightforward as all processing happens in the cloud.
 
+Both Mac OSX and Linux rely on Conan for dependencies. Install Conan, e.g. `pip install conan`, and install the dependencies:
+```sh
+$ conan profile detect --force
+$ conan install . --output-folder=./build_conan --build=missing -g CMakeDeps
+```
+
 ### Mac OSX
 
 ```sh
-$ ./.github/scripts/build-macos -c Release
+$ ./.github/scripts/build-macos --config Release
 ```
 
 ### Linux
 
 ```sh
-$ sudo apt install -y libssl-dev
 $ ./.github/scripts/build-linux
 ```
 
@@ -92,6 +95,8 @@ If you're developing the plugin, I find this command to be useful for direct dep
 ```powershell
 > .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
 ```
+
+### Other Plugins 
 
 Check out our other plugins:
 - [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device real-time transcription and translation
