@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.14)
 
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
 
-include(${CMAKE_SOURCE_DIR}/build_conan/websocketpp-config.cmake)
 find_package(OpenSSL CONFIG REQUIRED)
 
 if(WIN32)
@@ -17,14 +16,12 @@ if(WIN32)
   FetchContent_MakeAvailable(grpc)
 
   # Specify include directories and link libraries for your project
-  list(APPEND DEPS_INCLUDE_DIRS 
-    ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include 
+  list(APPEND DEPS_INCLUDE_DIRS
+    ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include
     ${openssl_INCLUDE_DIRS_RELEASE}
-    ${websocketpp_INCLUDE_DIRS_RELEASE}
-    ${boost_INCLUDE_DIRS_RELEASE})
-  list(APPEND DEPS_LIB_DIRS 
+    )
+  list(APPEND DEPS_LIB_DIRS
     ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib
-    ${boost_LIB_DIRS_RELEASE}
     )
   set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/protoc.exe)
   set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/grpc_cpp_plugin.exe)
