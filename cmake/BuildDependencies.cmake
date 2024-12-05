@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
+
 if(WIN32)
   set(GRPC_VERSION v1.68.0)
 
@@ -22,7 +24,6 @@ if(WIN32)
   # get all .lib files in the lib directory
   file(GLOB DEPS_LIBRARIES ${DEPS_LIB_DIRS}/*.lib)
 else()
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
   find_package(gRPC CONFIG REQUIRED)
   find_package(protobuf CONFIG REQUIRED)
   find_package(absl CONFIG REQUIRED)
