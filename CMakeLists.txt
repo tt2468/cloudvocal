@@ -64,7 +64,8 @@ target_sources(
           src/language-codes/language-codes.cpp
           src/cloud-providers/cloud-provider.cpp
           src/cloud-providers/clova/clova-provider.cpp
-          src/cloud-providers/google/google-provider.cpp)
+          src/cloud-providers/google/google-provider.cpp
+          src/cloud-providers/revai/revai-provider.cpp)
 
 add_subdirectory(src/cloud-translation)
 
