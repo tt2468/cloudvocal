@@ -14,6 +14,7 @@ public:
 		  reader_writer(nullptr),
 		  chunk_id(1)
 	{
+		needs_results_thread = true;
 	}
 
 	virtual bool init() override;

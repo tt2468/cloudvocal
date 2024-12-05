@@ -53,20 +53,20 @@ void send_sentence_to_cloud_translation_async(const std::string &sentence,
 					      const std::string &source_language,
 					      std::function<void(const std::string &)> callback)
 {
-	std::thread([sentence, gf, source_language, callback]() {
-		const std::string last_text = gf->last_text_for_translation;
-		gf->last_text_for_translation = sentence;
-		if (gf->translate && !sentence.empty()) {
-			obs_log(gf->log_level, "Translating text with cloud provider %s. %s -> %s",
-				gf->translate_cloud_config.provider.c_str(),
-				source_language.c_str(), gf->target_lang.c_str());
-			std::string translated_text;
-			if (sentence == last_text) {
-				// do not translate the same sentence twice
-				callback(gf->last_text_translation);
-				return;
-			}
+	const std::string last_text = gf->last_text_for_translation;
+	gf->last_text_for_translation = sentence;
+	if (gf->translate && !sentence.empty() && gf->active) {
+		obs_log(gf->log_level, "Translating text with cloud provider %s. %s -> %s",
+			gf->translate_cloud_config.provider.c_str(), source_language.c_str(),
+			gf->target_lang.c_str());
+		if (sentence == last_text) {
+			// do not translate the same sentence twice
+			callback(gf->last_text_translation);
+			return;
+		}
 
+		std::thread([sentence, gf, source_language, callback]() {
+			std::string translated_text;
 			translated_text = translate_cloud(gf->translate_cloud_config, sentence,
 							  gf->target_lang, source_language);
 			if (!translated_text.empty()) {
@@ -76,13 +76,13 @@ void send_sentence_to_cloud_translation_async(const std::string &sentence,
 				}
 				gf->last_text_translation = translated_text;
 				callback(translated_text);
-				return;
 			} else {
 				obs_log(gf->log_level, "Failed to translate text");
 			}
-		}
-		callback("");
-	}).detach();
+		}).detach();
+		return;
+	}
+	callback("");
 }
 
 void send_sentence_to_file(struct cloudvocal_data *gf, const DetectionResultWithText &result,
