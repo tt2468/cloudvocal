@@ -6,6 +6,8 @@ RevAIProvider::RevAIProvider(TranscriptionCallback callback, cloudvocal_data *gf
 	: CloudProvider(callback, gf),
 	  is_connected(false)
 {
+	needs_results_thread = false;
+
 	// Configure websocketpp
 	ws_client.clear_access_channels(websocketpp::log::alevel::all);
 	ws_client.clear_error_channels(websocketpp::log::elevel::all);

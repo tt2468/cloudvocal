@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.14)
 
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
 
+include(${CMAKE_SOURCE_DIR}/build_conan/websocketpp-config.cmake)
+find_package(OpenSSL CONFIG REQUIRED)
+
 if(WIN32)
   set(GRPC_VERSION v1.68.0)
 
@@ -13,22 +16,26 @@ if(WIN32)
   FetchContent_Declare(grpc URL ${grpc_url} DOWNLOAD_EXTRACT_TIMESTAMP 1)
   FetchContent_MakeAvailable(grpc)
 
-  find_package(OpenSSL CONFIG REQUIRED)
-
   # Specify include directories and link libraries for your project
-  list(APPEND DEPS_INCLUDE_DIRS ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include ${openssl_INCLUDE_DIRS_RELEASE})
-  set(DEPS_LIB_DIRS ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib)
+  list(APPEND DEPS_INCLUDE_DIRS 
+    ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/include 
+    ${openssl_INCLUDE_DIRS_RELEASE}
+    ${websocketpp_INCLUDE_DIRS_RELEASE}
+    ${boost_INCLUDE_DIRS_RELEASE})
+  list(APPEND DEPS_LIB_DIRS 
+    ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib
+    ${boost_LIB_DIRS_RELEASE}
+    )
   set(PROTOC_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/protoc.exe)
   set(GRPC_PLUGIN_EXECUTABLE ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/bin/grpc_cpp_plugin.exe)
 
   # get all .lib files in the lib directory
-  file(GLOB DEPS_LIBRARIES ${DEPS_LIB_DIRS}/*.lib)
+  file(GLOB DEPS_LIBRARIES ${grpc_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/lib/*.lib)
 else()
   find_package(gRPC CONFIG REQUIRED)
   find_package(protobuf CONFIG REQUIRED)
   find_package(absl CONFIG REQUIRED)
   find_package(ZLIB REQUIRED)
-  find_package(OpenSSL CONFIG REQUIRED)
   find_package(c-ares CONFIG REQUIRED)
   find_package(re2 CONFIG REQUIRED)
 
