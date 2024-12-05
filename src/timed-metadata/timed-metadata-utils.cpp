@@ -45,26 +45,11 @@ std::string hmacSha256(const std::string &key, const std::string &data, bool isH
 		keyBytes.assign(key.begin(), key.end());
 	}
 
-	// Use HMAC directly - this works on both 1.1 and 3.x
-	const EVP_MD *md = EVP_sha256();
-	HMAC_CTX *ctx = HMAC_CTX_new();
-
-	if (!ctx) {
-		obs_log(LOG_ERROR, "hmacSha256 failed: Could not create HMAC context");
-		bfree(digest);
-		return "";
-	}
-
-	if (!HMAC_Init_ex(ctx, keyBytes.data(), keyBytes.size(), md, NULL) ||
-	    !HMAC_Update(ctx, (unsigned char *)data.c_str(), data.length()) ||
-	    !HMAC_Final(ctx, digest, (unsigned int *)&len)) {
+	if (!HMAC(EVP_sha256(), keyBytes.data(), keyBytes.size(), (unsigned char *)data.c_str(),
+		  data.length(), digest, (unsigned int *)&len)) {
 		obs_log(LOG_ERROR, "hmacSha256 failed during HMAC operation");
-		HMAC_CTX_free(ctx);
-		bfree(digest);
-		return "";
+		return {};
 	}
-
-	HMAC_CTX_free(ctx);
 
 	std::stringstream ss;
 	for (size_t i = 0; i < len; ++i) {
