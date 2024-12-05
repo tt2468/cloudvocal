@@ -10,9 +10,9 @@
 [![Discord](https://img.shields.io/discord/1200229425141252116)](https://discord.gg/KbjGU2vvUz)
 <br/>
 Download:</br>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-macos-x86_64.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
-<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-windows-x64-Installer.exe"><img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-macos-universal.pkg"><img src="https://img.shields.io/badge/mac-000000?style=for-the-badge" /></a>
+<a href="https://github.com/locaal-ai/cloudvocal/releases/latest/download/cloudvocal-0.0.1-x86_64-linux-gnu.deb"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"/></a>
 </div>
 
 ## Introduction
@@ -31,15 +31,15 @@ Current Features:
 - Support for 100+ languages with dialect recognition
 - Streaming-optimized performance with minimal latency
 - Multiple cloud provider options for transcription and translation
-- Caption output in multiple formats (.txt, .srt, .vtt)
+- Caption output in multiple formats (.txt, .srt)
 - Sync'ed captions with OBS recording timestamps
 - Direct streaming to platforms (YouTube, Twitch) with embedded captions
-- Advanced text filtering and customization options
 - Partial transcriptions for a streaming-captions experience
-- Custom vocabulary and pronunciation support
-- Professional terminology handling for specific industries
 
 Roadmap:
+- Custom vocabulary and pronunciation support
+- Professional terminology handling for specific industries
+- Advanced text filtering and customization options
 - Speaker diarization for multi-speaker environments
 - Advanced profanity filtering options
 - Custom translation glossaries
@@ -86,8 +86,17 @@ $ ./.github/scripts/build-linux
 
 ### Windows
 
+Windows also needs Conan for OpenSSL. Run `conan` to get the dependency (make sure to run `conan` on the `conanfile_win.txt`):
 ```powershell
-> .github/scripts/Build-Windows.ps1 -Configuration Release
+> pip install conan
+> conan profile detect --force
+> conan install .\conanfile_win.txt --output-folder=./build_conan --build=missing -g CMakeDeps 
+```
+
+Build the plugin:
+
+```powershell
+> .\.github\scripts\Build-Windows.ps1 -Configuration Release
 ```
 
 If you're developing the plugin, I find this command to be useful for direct deploymet into OBS after building:
@@ -96,7 +105,7 @@ If you're developing the plugin, I find this command to be useful for direct dep
 > .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
 ```
 
-### Other Plugins 
+### Other Plugins
 
 Check out our other plugins:
 - [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device real-time transcription and translation

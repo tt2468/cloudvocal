@@ -32,6 +32,7 @@ public:
 		  initialized(false),
 		  current_sentence("")
 	{
+		needs_results_thread = true;
 	}
 
 	virtual bool init() override;

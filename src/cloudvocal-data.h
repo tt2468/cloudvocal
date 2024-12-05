@@ -36,6 +36,13 @@ struct DetectionResultWithText {
 
 class CloudProvider;
 
+struct TimedMetadataConfig {
+	std::string aws_access_key;
+	std::string aws_secret_key;
+	std::string ivs_channel_arn;
+	std::string aws_region;
+};
+
 struct cloudvocal_data {
 	int log_level;
 	bool active;
@@ -87,6 +94,10 @@ struct cloudvocal_data {
 	std::string last_text_for_translation;
 	std::string last_text_translation;
 	CloudTranslatorConfig translate_cloud_config;
+
+	// Timed metadata options
+	bool send_timed_metadata;
+	TimedMetadataConfig timed_metadata_config;
 
 	std::mutex input_buffers_mutex;
 	std::condition_variable input_buffers_cv;

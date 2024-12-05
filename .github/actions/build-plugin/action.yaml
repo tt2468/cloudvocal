@@ -30,14 +30,8 @@ runs:
         python-version: '3.10'
 
     - name: Install Conan 🪓
-      if: runner.os == 'Linux' || runner.os == 'macOS'
       id: conan
       uses: turtlebrowser/get-conan@main
-
-    - name: Conan version
-      if: runner.os == 'Linux' || runner.os == 'macOS'
-      shell: bash
-      run: echo "${{ steps.conan.outputs.version }}"
 
     - name: Install Dependencies 🛍️
       if: runner.os == 'Linux'
@@ -50,15 +44,24 @@ runs:
         brew install --quiet zsh
         echo ::endgroup::
 
-    - name: Build gRPC 🛠️
+    - name: Build Dependencies 🛠️
       if: runner.os == 'Linux' || runner.os == 'macOS'
       shell: bash
       run: |
-        : Build gRPC 🛠️
-        echo ::group::Build gRPC
+        : Build Dependencies 🛠️
+        echo ::group::Build Dependencies
         conan profile detect --force
         conan install ${{github.workspace}} --output-folder=${{github.workspace}}/build_conan --build=missing -g CMakeDeps
         echo ::endgroup::
+
+    - name: Build Windows Dependencies 🛠️
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        Write-Host "::group::Build Windows Dependencies"
+        conan profile detect --force
+        conan install ${{github.workspace}}/conanfile_win.txt --output-folder=${{github.workspace}}/build_conan --build=missing -g CMakeDeps
+        Write-Host "::endgroup::"
 
     - name: Run macOS Build
       if: runner.os == 'macOS'

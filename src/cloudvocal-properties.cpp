@@ -67,8 +67,8 @@ bool advanced_settings_callback(obs_properties_t *props, obs_property_t *propert
 	UNUSED_PARAMETER(property);
 	// If advanced settings is enabled, show the advanced settings group
 	const bool show_hide = obs_data_get_int(settings, "advanced_settings_mode") == 1;
-	for (const std::string &prop_name :
-	     {"log_group", "advanced_group", "file_output_enable", "partial_group"}) {
+	for (const std::string &prop_name : {"log_group", "advanced_group", "file_output_enable",
+					     "partial_group", "timed_metadata_group"}) {
 		obs_property_set_visible(obs_properties_get(props, prop_name.c_str()), show_hide);
 	}
 	translation_cloud_options_callback(props, NULL, settings);
@@ -323,6 +323,26 @@ void add_partial_group_properties(obs_properties_t *ppts)
 				      3000, 50);
 }
 
+void add_timed_metadata_group_properties(obs_properties_t *ppts)
+{
+	// add group for Amazon IVS settings
+	obs_properties_t *timed_metadata_group = obs_properties_create();
+	obs_properties_add_group(ppts, "timed_metadata_group", MT_("timed_metadata_parameters"),
+				 OBS_GROUP_CHECKABLE, timed_metadata_group);
+	// add Amazon IVS channel ARN
+	obs_properties_add_text(timed_metadata_group, "timed_metadata_channel_arn",
+				MT_("timed_metadata_channel_arn"), OBS_TEXT_DEFAULT);
+	// add AWS_ACCESS_KEY
+	obs_properties_add_text(timed_metadata_group, "timed_metadata_aws_access_key",
+				MT_("timed_metadata_aws_access_key"), OBS_TEXT_DEFAULT);
+	// add AWS_SECRET_KEY
+	obs_properties_add_text(timed_metadata_group, "timed_metadata_aws_secret_key",
+				MT_("timed_metadata_aws_secret_key"), OBS_TEXT_PASSWORD);
+	// add region
+	obs_properties_add_text(timed_metadata_group, "timed_metadata_aws_region",
+				MT_("timed_metadata_aws_region"), OBS_TEXT_DEFAULT);
+}
+
 obs_properties_t *cloudvocal_properties(void *data)
 {
 	struct cloudvocal_data *gf = static_cast<struct cloudvocal_data *>(data);
@@ -344,6 +364,7 @@ obs_properties_t *cloudvocal_properties(void *data)
 	add_advanced_group_properties(ppts, gf);
 	add_logging_group_properties(ppts);
 	add_partial_group_properties(ppts);
+	add_timed_metadata_group_properties(ppts);
 
 	// Add a informative text about the plugin
 	std::string template_out = PLUGIN_INFO_TEMPLATE;

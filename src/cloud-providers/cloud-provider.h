@@ -17,7 +17,9 @@ public:
 	CloudProvider(TranscriptionCallback callback, cloudvocal_data *gf_)
 		: transcription_callback(callback),
 		  running(false),
-		  gf(gf_)
+		  gf(gf_),
+		  stop_requested(false),
+		  needs_results_thread(false)
 	{
 	}
 
@@ -30,12 +32,15 @@ public:
 		running = true;
 		stop_requested = false;
 		transcription_thread = std::thread(&CloudProvider::processAudio, this);
-		results_thread = std::thread(&CloudProvider::processResults, this);
+		if (needs_results_thread) {
+			results_thread = std::thread(&CloudProvider::processResults, this);
+		}
 	}
 
 	void stop()
 	{
 		stop_requested = true;
+		gf->input_buffers_cv.notify_all();
 		if (transcription_thread.joinable()) {
 			transcription_thread.join();
 		}
@@ -106,6 +111,7 @@ protected:
 	std::atomic<bool> running;
 	std::atomic<bool> stop_requested;
 	TranscriptionCallback transcription_callback;
+	bool needs_results_thread;
 
 private:
 	std::thread transcription_thread;
