@@ -130,9 +130,8 @@ void send_timed_metadata_to_ivs_endpoint(struct cloudvocal_data *gf, Translation
 
 	// Construct the inner JSON string
 	nlohmann::json inner_meta_data;
-	if (mode == NON_WHISPER_TRANSLATE) {
-		obs_log(gf->log_level,
-			"send_timed_metadata_to_ivs_endpoint - NON_WHISPER_TRANSLATE");
+	if (mode == SOURCE_AND_TARGET) {
+		obs_log(gf->log_level, "send_timed_metadata_to_ivs_endpoint - SOURCE_AND_TARGET");
 		nlohmann::json array;
 		if (!source_text.empty()) {
 			array.push_back({{"language", source_lang}, {"text", source_text}});
@@ -146,13 +145,13 @@ void send_timed_metadata_to_ivs_endpoint(struct cloudvocal_data *gf, Translation
 			return;
 		}
 		inner_meta_data = {{"captions", array}};
-	} else if (mode == WHISPER_TRANSLATE) {
+	} else if (mode == ONLY_TARGET) {
 		if (target_text.empty()) {
 			obs_log(gf->log_level,
 				"send_timed_metadata_to_ivs_endpoint - target text empty");
 			return;
 		}
-		obs_log(gf->log_level, "send_timed_metadata_to_ivs_endpoint - WHISPER_TRANSLATE");
+		obs_log(gf->log_level, "send_timed_metadata_to_ivs_endpoint - ONLY_TARGET");
 		inner_meta_data = {
 			{"captions", {{{"language", target_lang}, {"text", target_text}}}}};
 	} else {
@@ -161,7 +160,7 @@ void send_timed_metadata_to_ivs_endpoint(struct cloudvocal_data *gf, Translation
 				"send_timed_metadata_to_ivs_endpoint - source text empty");
 			return;
 		}
-		obs_log(gf->log_level, "send_timed_metadata_to_ivs_endpoint - transcription mode");
+		obs_log(gf->log_level, "send_timed_metadata_to_ivs_endpoint - ONLY_SOURCE");
 		inner_meta_data = {
 			{"captions", {{{"language", source_lang}, {"text", source_text}}}}};
 	}

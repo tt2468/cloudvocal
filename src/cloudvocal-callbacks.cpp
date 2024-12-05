@@ -18,6 +18,7 @@
 #include "cloudvocal-callbacks.h"
 #include "cloudvocal-utils.h"
 #include "plugin-support.h"
+#include "timed-metadata/timed-metadata-utils.h"
 
 void send_caption_to_source(const std::string &target_source_name, const std::string &caption,
 			    struct cloudvocal_data *gf)
@@ -217,6 +218,8 @@ void set_text_callback(struct cloudvocal_data *gf, const DetectionResultWithText
 		}
 	}
 
+	// should translate if translation is enabled and the result is full
+	// or if partial translations are enabled
 	bool should_translate = (gf->translate_only_full_sentences
 					 ? result.result == DETECTION_RESULT_SPEECH
 					 : true) &&
@@ -239,7 +242,18 @@ void set_text_callback(struct cloudvocal_data *gf, const DetectionResultWithText
 									 translated_sentence_cloud,
 									 gf->target_lang);
 				}
+				if (gf->send_timed_metadata) {
+					send_timed_metadata_to_server(gf, SOURCE_AND_TARGET,
+								      result.text, result.language,
+								      translated_sentence_cloud,
+								      gf->target_lang);
+				}
 			});
+	} else {
+		if (gf->send_timed_metadata) {
+			send_timed_metadata_to_server(gf, ONLY_SOURCE, result.text, result.language,
+						      "", "");
+		}
 	}
 
 	// send the original text to the output

@@ -31,15 +31,15 @@ Current Features:
 - Support for 100+ languages with dialect recognition
 - Streaming-optimized performance with minimal latency
 - Multiple cloud provider options for transcription and translation
-- Caption output in multiple formats (.txt, .srt, .vtt)
+- Caption output in multiple formats (.txt, .srt)
 - Sync'ed captions with OBS recording timestamps
 - Direct streaming to platforms (YouTube, Twitch) with embedded captions
-- Advanced text filtering and customization options
 - Partial transcriptions for a streaming-captions experience
-- Custom vocabulary and pronunciation support
-- Professional terminology handling for specific industries
 
 Roadmap:
+- Custom vocabulary and pronunciation support
+- Professional terminology handling for specific industries
+- Advanced text filtering and customization options
 - Speaker diarization for multi-speaker environments
 - Advanced profanity filtering options
 - Custom translation glossaries
@@ -86,8 +86,17 @@ $ ./.github/scripts/build-linux
 
 ### Windows
 
+Windows also needs Conan for OpenSSL. Run `conan` to get the dependency (make sure to run `conan` on the `conanfile_win.txt`):
 ```powershell
-> .github/scripts/Build-Windows.ps1 -Configuration Release
+> pip install conan
+> conan profile detect --force
+> conan install .\conanfile_win.txt --output-folder=./build_conan --build=missing -g CMakeDeps 
+```
+
+Build the plugin:
+
+```powershell
+> .\.github\scripts\Build-Windows.ps1 -Configuration Release
 ```
 
 If you're developing the plugin, I find this command to be useful for direct deploymet into OBS after building:
