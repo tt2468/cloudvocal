@@ -2,11 +2,10 @@
 #include "plugin-support.h"
 #include "timed-metadata-utils.h"
 
-#define OPENSSL_NO_DEPRECATED 1
-
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 #include <openssl/hmac.h>
+#include <openssl/err.h>
 
 #include <vector>
 #include <sstream>
@@ -22,41 +21,56 @@
 
 #include <nlohmann/json.hpp>
 
+void init_openssl()
+{
+	OpenSSL_add_all_algorithms();
+	ERR_load_crypto_strings();
+}
+
 // HMAC SHA-256 function
 std::string hmacSha256(const std::string &key, const std::string &data, bool isHexKey = false)
 {
-	unsigned char *digest;
+	unsigned char *digest = (unsigned char *)bzalloc(EVP_MAX_MD_SIZE);
 	size_t len = EVP_MAX_MD_SIZE;
-	digest = (unsigned char *)bzalloc(len);
 
-	EVP_PKEY *pkey = nullptr;
+	// Prepare the key
+	std::vector<unsigned char> keyBytes;
 	if (isHexKey) {
-		// Convert hex string to binary data
-		std::vector<unsigned char> hexKey;
 		for (size_t i = 0; i < key.length(); i += 2) {
 			std::string byteString = key.substr(i, 2);
 			unsigned char byte = (unsigned char)strtol(byteString.c_str(), NULL, 16);
-			hexKey.push_back(byte);
+			keyBytes.push_back(byte);
 		}
-		pkey = EVP_PKEY_new_raw_private_key(EVP_PKEY_HMAC, NULL, hexKey.data(),
-						    (int)hexKey.size());
 	} else {
-		pkey = EVP_PKEY_new_raw_private_key(
-			EVP_PKEY_HMAC, NULL, (unsigned char *)key.c_str(), (int)key.length());
+		keyBytes.assign(key.begin(), key.end());
 	}
 
-	EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-	EVP_DigestSignInit(ctx, NULL, EVP_sha256(), NULL, pkey);
-	EVP_DigestSignUpdate(ctx, data.c_str(), data.length());
-	EVP_DigestSignFinal(ctx, digest, &len);
+	// Use HMAC directly - this works on both 1.1 and 3.x
+	const EVP_MD *md = EVP_sha256();
+	HMAC_CTX *ctx = HMAC_CTX_new();
 
-	EVP_PKEY_free(pkey);
-	EVP_MD_CTX_free(ctx);
+	if (!ctx) {
+		obs_log(LOG_ERROR, "hmacSha256 failed: Could not create HMAC context");
+		bfree(digest);
+		return "";
+	}
+
+	if (!HMAC_Init_ex(ctx, keyBytes.data(), keyBytes.size(), md, NULL) ||
+	    !HMAC_Update(ctx, (unsigned char *)data.c_str(), data.length()) ||
+	    !HMAC_Final(ctx, digest, (unsigned int *)&len)) {
+		obs_log(LOG_ERROR, "hmacSha256 failed during HMAC operation");
+		HMAC_CTX_free(ctx);
+		bfree(digest);
+		return "";
+	}
+
+	HMAC_CTX_free(ctx);
 
 	std::stringstream ss;
 	for (size_t i = 0; i < len; ++i) {
 		ss << std::hex << std::setw(2) << std::setfill('0') << (int)digest[i];
 	}
+
 	bfree(digest);
 	return ss.str();
 }
