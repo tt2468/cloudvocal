@@ -23,7 +23,7 @@
 void send_caption_to_source(const std::string &target_source_name, const std::string &caption,
 			    struct cloudvocal_data *gf)
 {
-	if (target_source_name.empty()) {
+	if (target_source_name.empty() || !gf->active || gf->context == nullptr) {
 		return;
 	}
 	auto target = obs_get_source_by_name(target_source_name.c_str());

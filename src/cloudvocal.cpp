@@ -120,12 +120,17 @@ void cloudvocal_remove(void *data, obs_source_t *source)
 void cloudvocal_destroy(void *data)
 {
 	struct cloudvocal_data *gf = static_cast<struct cloudvocal_data *>(data);
+	gf->active = false;
 
 	signal_handler_t *sh_filter = obs_source_get_signal_handler(gf->context);
 	signal_handler_disconnect(sh_filter, "enable", enable_callback, gf);
 
 	obs_log(gf->log_level, "filter destroy");
-	// shutdown_transcription_thread(gf);
+
+	if (gf->cloud_provider != nullptr) {
+		gf->cloud_provider->stop();
+		gf->cloud_provider = nullptr;
+	}
 
 	if (gf->resampler) {
 		audio_resampler_destroy(gf->resampler);
@@ -139,6 +144,7 @@ void cloudvocal_destroy(void *data)
 	}
 	gf->info_buffer.clear();
 	gf->resampled_buffer.clear();
+	gf->context = nullptr;
 
 	bfree(gf);
 }
