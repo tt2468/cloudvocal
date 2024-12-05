@@ -16,7 +16,7 @@ add_library(clova-apis ${CLOVA_SOURCE_DIR}/nest.pb.cc ${CLOVA_SOURCE_DIR}/nest.g
 
 # disable conversion warnings from the generated files
 if(MSVC)
-  target_compile_options(clova-apis PRIVATE /wd4244 /wd4267)
+  target_compile_options(clova-apis PRIVATE /wd4244 /wd4267 /wd4099)
 else()
   target_compile_options(
     clova-apis
@@ -31,12 +31,11 @@ else()
 endif()
 
 # Add include directories
-target_include_directories(clova-apis PUBLIC ${CLOVA_OUTPUT_DIR} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR}
-                                             ${absl_INCLUDE_DIRS})
+target_include_directories(clova-apis PUBLIC ${CLOVA_OUTPUT_DIR} ${DEPS_INCLUDE_DIRS})
 
 # link the grpc libraries
-target_link_libraries(clova-apis PRIVATE ${GRPC_LIBRARIES})
-target_link_directories(clova-apis PRIVATE ${GRPC_LIB_DIR})
+target_link_libraries(clova-apis PRIVATE ${DEPS_LIBRARIES})
+target_link_directories(clova-apis PRIVATE ${DEPS_LIB_DIRS})
 
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE clova-apis)

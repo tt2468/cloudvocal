@@ -106,13 +106,16 @@ jobs:
       - name: Create Release 🛫
         if: fromJSON(steps.check.outputs.validTag)
         id: create_release
-        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564
+        uses: softprops/action-gh-release@v2
         with:
           draft: true
           prerelease: ${{ fromJSON(steps.check.outputs.prerelease) }}
           tag_name: ${{ steps.check.outputs.version }}
-          name: ${{ needs.build-project.outputs.pluginName }} ${{ steps.check.outputs.version }}
+          name: CloudVocal ${{ steps.check.outputs.version }}
           body_path: ${{ github.workspace }}/CHECKSUMS.txt
+          generate_release_notes: true
+          append_body: true
+          fail_on_unmatched_files: false
           files: |
             ${{ github.workspace }}/*.exe
             ${{ github.workspace }}/*.zip

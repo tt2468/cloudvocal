@@ -23,7 +23,7 @@ set(PROTO_FILES
     ${googleapis_SOURCE_DIR}/google/longrunning/operations.proto
     ${googleapis_SOURCE_DIR}/google/rpc/status.proto)
 
-set(OUTPUT_FOLDER ${CMAKE_SOURCE_DIR}/src/cloud-providers/google)
+set(GOOGLE_APIS_OUTPUT_FOLDER ${CMAKE_SOURCE_DIR}/src/cloud-providers/google)
 
 set(GOOGLE_APIS_OUTPUT_FILES "")
 
@@ -44,13 +44,14 @@ foreach(PROTO_FILE ${PROTO_FILES})
   get_filename_component(PROTO_FILE_DIR ${PROTO_FILE_RELATIVE} DIRECTORY)
 
   # append the output files to the list
-  list(APPEND GOOGLE_APIS_OUTPUT_FILES ${OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_CC_FILE}
-       ${OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_GRPC_FILE})
+  list(APPEND GOOGLE_APIS_OUTPUT_FILES ${GOOGLE_APIS_OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_CC_FILE}
+       ${GOOGLE_APIS_OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_GRPC_FILE})
 
   # Generate the grpc files
   add_custom_command(
-    OUTPUT ${OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_CC_FILE} ${OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_GRPC_FILE}
-    COMMAND ${PROTOC_EXECUTABLE} --cpp_out=${OUTPUT_FOLDER} --grpc_out=${OUTPUT_FOLDER}
+    OUTPUT ${GOOGLE_APIS_OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_CC_FILE}
+           ${GOOGLE_APIS_OUTPUT_FOLDER}/${PROTO_FILE_DIR}/${PROTO_GRPC_FILE}
+    COMMAND ${PROTOC_EXECUTABLE} --cpp_out=${GOOGLE_APIS_OUTPUT_FOLDER} --grpc_out=${GOOGLE_APIS_OUTPUT_FOLDER}
             --plugin=protoc-gen-grpc=${GRPC_PLUGIN_EXECUTABLE} -I ${googleapis_SOURCE_DIR} ${PROTO_FILE}
     DEPENDS ${PROTO_FILE})
 endforeach()
@@ -60,7 +61,7 @@ add_library(google-apis ${GOOGLE_APIS_OUTPUT_FILES})
 
 # disable conversion warnings from the generated files
 if(MSVC)
-  target_compile_options(google-apis PRIVATE /wd4244 /wd4267)
+  target_compile_options(google-apis PRIVATE /wd4244 /wd4267 /wd4099)
 else()
   target_compile_options(
     google-apis
@@ -74,12 +75,11 @@ else()
             -Wno-error=conversion)
 endif()
 
-target_include_directories(google-apis PUBLIC ${OUTPUT_FOLDER} ${GRPC_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR}
-                                              ${absl_INCLUDE_DIRS})
+target_include_directories(google-apis PUBLIC ${GOOGLE_APIS_OUTPUT_FOLDER} ${DEPS_INCLUDE_DIRS})
 
 # link the grpc libraries
-target_link_libraries(google-apis PRIVATE ${GRPC_LIBRARIES})
-target_link_directories(google-apis PRIVATE ${GRPC_LIB_DIR})
+target_link_libraries(google-apis PRIVATE ${DEPS_LIBRARIES})
+target_link_directories(google-apis PRIVATE ${DEPS_LIB_DIRS})
 
 # link the library to the main project
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE google-apis)

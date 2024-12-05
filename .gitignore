@@ -16,6 +16,7 @@
 !LICENSE
 !README.md
 !conanfile.txt
+!conanfile_win.txt
 
 # Exclude lock files
 *.lock.json

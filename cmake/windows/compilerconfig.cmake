@@ -32,6 +32,7 @@ add_compile_options(
   /W3
   /utf-8
   /wd4267
+  /wd4099
   "$<$<COMPILE_LANG_AND_ID:C,MSVC>:/MP>"
   "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/MP>"
   "$<$<COMPILE_LANG_AND_ID:C,Clang>:${_obs_clang_c_options}>"
@@ -46,7 +47,8 @@ add_link_options($<$<NOT:$<CONFIG:Debug>>:/OPT:REF>
                  $<$<NOT:$<CONFIG:Debug>>:/OPT:ICF>
                  $<$<NOT:$<CONFIG:Debug>>:/INCREMENTAL:NO>
                  /DEBUG
-                 /Brepro)
+                 /Brepro
+                 /IGNORE:4099)
 # cmake-format: on
 
 if(CMAKE_COMPILE_WARNING_AS_ERROR)
