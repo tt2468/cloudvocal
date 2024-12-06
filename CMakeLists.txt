@@ -65,6 +65,7 @@ target_sources(
           src/cloud-providers/cloud-provider.cpp
           src/cloud-providers/clova/clova-provider.cpp
           src/cloud-providers/google/google-provider.cpp
+          src/ssl-utils/ssl-utils.cpp
           src/timed-metadata/timed-metadata-utils.cpp)
 
 add_subdirectory(src/cloud-translation)
