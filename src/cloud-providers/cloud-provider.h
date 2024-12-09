@@ -39,12 +39,15 @@ public:
 
 	void stop()
 	{
+		obs_log(gf->log_level, "Stopping cloud provider");
 		stop_requested = true;
 		gf->input_buffers_cv.notify_all();
 		if (transcription_thread.joinable()) {
+			obs_log(gf->log_level, "Joining transcription thread...");
 			transcription_thread.join();
 		}
 		if (results_thread.joinable()) {
+			obs_log(gf->log_level, "Joining results thread...");
 			results_thread.join();
 		}
 		running = false;

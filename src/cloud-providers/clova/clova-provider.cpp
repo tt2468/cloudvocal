@@ -1,5 +1,8 @@
 #include "clova-provider.h"
 #include <iostream>
+#include <fstream>
+#include <iterator>
+#include <algorithm>
 
 #include "plugin-support.h"
 
@@ -8,6 +11,7 @@
 
 #include "cloud-providers/clova/nest.grpc.pb.h"
 #include "language-codes/language-codes.h"
+#include "utils/ssl-utils.h"
 
 using grpc::Status;
 
@@ -29,6 +33,8 @@ bool ClovaProvider::init()
 	}
 
 	grpc::SslCredentialsOptions ssl_opts;
+	ssl_opts.pem_root_certs = PEMrootCerts();
+
 	this->channel = grpc::CreateChannel("clovaspeech-gw.ncloud.com:50051",
 					    grpc::SslCredentials(ssl_opts));
 	this->stub = NestService::NewStub(channel);

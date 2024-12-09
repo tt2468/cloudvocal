@@ -11,10 +11,12 @@
 #include <iomanip>
 #include <chrono>
 #include <ctime>
+#include <fstream>
 
 #include <util/bmem.h>
 
 #include "plugin-support.h"
+#include <obs-module.h>
 
 void init_openssl()
 {
@@ -99,4 +101,35 @@ std::string getCurrentDate()
 	std::stringstream ss;
 	ss << std::put_time(std::gmtime(&in_time_t), "%Y%m%d");
 	return ss.str();
+}
+
+std::string PEMrootCerts()
+{
+	// Read the contents of the root CA file bundled with this plugin module
+	char *root_cert_file_path = obs_module_file("roots.pem");
+	if (root_cert_file_path == nullptr) {
+		obs_log(LOG_ERROR, "Failed to get root certificate file path");
+		return "";
+	}
+	std::ifstream root_cert_file(root_cert_file_path);
+	if (!root_cert_file.is_open()) {
+		obs_log(LOG_ERROR, "Failed to open certificate file");
+		return "";
+	}
+
+	std::stringstream cert_stream;
+	cert_stream << root_cert_file.rdbuf();
+	root_cert_file.close();
+	return cert_stream.str();
+}
+
+std::string PEMrootCertsPath()
+{
+	char *root_cert_file_path = obs_module_file("roots.pem");
+	if (root_cert_file_path == nullptr) {
+		obs_log(LOG_ERROR, "Failed to get root certificate file path");
+		return "";
+	}
+
+	return std::string(root_cert_file_path);
 }

@@ -8,8 +8,8 @@
 
 using json = nlohmann::json;
 struct EventData {
-    std::unordered_map<std::string, std::string> headers;
-    json payload;
+	std::unordered_map<std::string, std::string> headers;
+	json payload;
 };
 
 // Platform-independent byte swapping functions
@@ -17,13 +17,13 @@ uint16_t swap_uint16(uint16_t val);
 uint32_t swap_uint32(uint32_t val);
 
 // Decodes an event message
-EventData decode_event(const std::vector<uint8_t>& message);
+EventData decode_event(const std::vector<uint8_t> &message);
 
 // Creates an audio event message
 //std::vector<uint8_t> create_audio_event(const std::vector<uint8_t>& payload);
-std::vector<uint8_t> create_audio_event(const std::vector<uint8_t>& payload);
+std::vector<uint8_t> create_audio_event(const std::vector<uint8_t> &payload);
 
 // Generates headers for the audio event
-std::vector<uint8_t> get_headers(const std::string& headerName, const std::string& headerValue);
+std::vector<uint8_t> get_headers(const std::string &headerName, const std::string &headerValue);
 
 #endif // AWS_TRANSCRIBE_AUDIO_FRAME_HPP

@@ -1,5 +1,5 @@
 #include "papago.h"
-#include "curl-helper.h"
+#include "utils/curl-helper.h"
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <unordered_map>

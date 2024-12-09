@@ -283,6 +283,7 @@ void add_general_group_properties(obs_properties_t *ppts)
 				     "clova");
 	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
 				     "google");
+	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("AWS"), "aws");
 
 	obs_property_t *subs_output =
 		obs_properties_add_list(general_group, "subtitle_sources", MT_("subtitle_sources"),
@@ -305,6 +306,9 @@ void add_general_group_properties(obs_properties_t *ppts)
 	// add text input for API Key
 	obs_properties_add_text(general_group, "transcription_cloud_provider_api_key",
 				MT_("transcription_cloud_provider_api_key"), OBS_TEXT_PASSWORD);
+	// add text input for API Secret Key
+	obs_properties_add_text(general_group, "transcription_cloud_provider_secret_key",
+				MT_("transcription_cloud_provider_secret_key"), OBS_TEXT_PASSWORD);
 }
 
 void add_partial_group_properties(obs_properties_t *ppts)

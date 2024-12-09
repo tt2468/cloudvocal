@@ -10,7 +10,7 @@ CurlHelper::CurlHelper()
 	std::lock_guard<std::mutex> lock(curl_mutex_);
 	if (!is_initialized_) {
 		if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
-			throw TranslationError("Failed to initialize CURL");
+			throw std::exception("Failed to initialize CURL");
 		}
 		is_initialized_ = true;
 	}
@@ -38,17 +38,16 @@ size_t CurlHelper::WriteCallback(void *contents, size_t size, size_t nmemb, void
 	}
 }
 
-std::string CurlHelper::urlEncode(CURL *curl, const std::string &value)
+std::string CurlHelper::urlEncode(const std::string &value)
 {
-	if (!curl) {
-		throw TranslationError("Invalid CURL handle for URL encoding");
-	}
+	std::unique_ptr<CURL, decltype(&curl_easy_cleanup)> curl(curl_easy_init(),
+								 curl_easy_cleanup);
 
 	std::unique_ptr<char, decltype(&curl_free)> escaped(
-		curl_easy_escape(curl, value.c_str(), (int)value.length()), curl_free);
+		curl_easy_escape(curl.get(), value.c_str(), (int)value.length()), curl_free);
 
 	if (!escaped) {
-		throw TranslationError("Failed to URL encode string");
+		throw std::exception("Failed to URL encode string");
 	}
 
 	return std::string(escaped.get());
@@ -62,7 +61,7 @@ struct curl_slist *CurlHelper::createBasicHeaders(const std::string &content_typ
 		headers = curl_slist_append(headers, ("Content-Type: " + content_type).c_str());
 
 		if (!headers) {
-			throw TranslationError("Failed to create HTTP headers");
+			throw std::exception("Failed to create HTTP headers");
 		}
 
 		return headers;
@@ -77,7 +76,7 @@ struct curl_slist *CurlHelper::createBasicHeaders(const std::string &content_typ
 void CurlHelper::setSSLVerification(CURL *curl, bool verify)
 {
 	if (!curl) {
-		throw TranslationError("Invalid CURL handle for SSL configuration");
+		throw std::exception("Invalid CURL handle for SSL configuration");
 	}
 
 	long verify_peer = verify ? 1L : 0L;
