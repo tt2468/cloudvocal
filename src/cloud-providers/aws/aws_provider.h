@@ -15,6 +15,7 @@ namespace TranscribeStreamingService {
 class TranscribeStreamingServiceClient;
 namespace Model {
 class StartStreamTranscriptionRequest;
+class StartStreamTranscriptionHandler;
 }
 } // namespace TranscribeStreamingService
 } // namespace Aws
@@ -24,7 +25,7 @@ public:
 	AWSProvider(TranscriptionCallback callback, cloudvocal_data *gf)
 		: CloudProvider(callback, gf)
 	{
-		needs_results_thread = true;
+		needs_results_thread = false;
 	}
 
 	virtual ~AWSProvider() {}
@@ -42,6 +43,8 @@ private:
 	std::shared_ptr<Aws::TranscribeStreamingService::TranscribeStreamingServiceClient> client;
 	std::shared_ptr<Aws::TranscribeStreamingService::Model::StartStreamTranscriptionRequest>
 		request;
+	std::shared_ptr<Aws::TranscribeStreamingService::Model::StartStreamTranscriptionHandler>
+		handler;
 
 	std::queue<std::vector<float>> audio_buffer_queue;
 	std::mutex audio_buffer_queue_mutex;

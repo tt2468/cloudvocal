@@ -29,7 +29,6 @@ public:
 
 	void start()
 	{
-		running = true;
 		stop_requested = false;
 		transcription_thread = std::thread(&CloudProvider::processAudio, this);
 		if (needs_results_thread) {
@@ -68,6 +67,8 @@ protected:
 			running = false;
 			return;
 		}
+
+		running = true;
 
 		uint64_t start_timestamp_offset_ns = 0;
 		uint64_t end_timestamp_offset_ns = 0;
