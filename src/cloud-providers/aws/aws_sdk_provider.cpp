@@ -35,11 +35,9 @@ bool AWSProvider::init()
 		return false;
 	}
 
-	obs_log(LOG_INFO, "AWS Provider Initializing... api key '%s' secret key '%s'", gf->cloud_provider_api_key.c_str(), gf->cloud_provider_secret_key.c_str());
+	obs_log(LOG_INFO, "AWS Provider Initializing...");
 
 	Aws::SDKOptions options;
-	options.cryptoOptions.initAndCleanupOpenSSL = true;
-	options.loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Trace;
 	Aws::InitAPI(options);
 
 	Aws::Client::ClientConfiguration config;
@@ -47,8 +45,7 @@ bool AWSProvider::init()
 	config.caFile = PEMrootCertsPath();
 #endif
 	config.region = Aws::Region::US_EAST_1;
-	config.enableHttpClientTrace = true;
-	config.httpLibOverride = Aws::Http::TransferLibType::CURL_CLIENT;
+	config.httpLibOverride = Aws::Http::TransferLibType::WIN_INET_CLIENT;
 
 	// set credentials
 	Aws::Auth::AWSCredentials credentials(gf->cloud_provider_api_key,
@@ -59,8 +56,10 @@ bool AWSProvider::init()
 	this->handler.reset(new StartStreamTranscriptionHandler());
 	handler->SetOnErrorCallback(
 		[this](const Aws::Client::AWSError<TranscribeStreamingServiceErrors> &error) {
-			obs_log(LOG_ERROR, "Start Stream Transcription ERROR (req ID %s): %s [Error code: %s]",
-				error.GetRequestId().c_str(), error.GetMessage().c_str(), error.GetExceptionName().c_str());
+			obs_log(LOG_ERROR,
+				"Start Stream Transcription ERROR (req ID '%s'): %s [Error code: %s]",
+				error.GetRequestId().c_str(), error.GetMessage().c_str(),
+				error.GetExceptionName().c_str());
 			this->stop();
 		});
 	handler->SetTranscriptEventCallback([](const TranscriptEvent &ev) {
@@ -80,9 +79,9 @@ bool AWSProvider::init()
 
 	this->request.reset(new StartStreamTranscriptionRequest());
 	this->request->SetMediaSampleRateHertz(SAMPLE_RATE);
-	this->request->SetLanguageCode(
-		Aws::TranscribeStreamingService::Model::LanguageCodeMapper::GetLanguageCodeForName(
-			gf->language));
+	this->request->SetLanguageCode(Aws::TranscribeStreamingService::Model::LanguageCode::en_US);
+	// Aws::TranscribeStreamingService::Model::LanguageCodeMapper::GetLanguageCodeForName(
+	// 	gf->language));
 	this->request->SetMediaEncoding(MediaEncoding::pcm); // wav and aiff files are PCM formats.
 	this->request->SetEventStreamHandler(*(handler.get()));
 
@@ -95,12 +94,15 @@ bool AWSProvider::init()
 		obs_log(LOG_INFO, "AWS Provider Stream Ready...");
 		this->stream_open = true;
 		while (!this->stop_requested) {
-			obs_log(LOG_INFO, "AWS Provider Stream Loop. Wait for audio buffer mutex...");
+			obs_log(LOG_INFO,
+				"AWS Provider Stream Loop. Wait for audio buffer mutex...");
 			// wait for a signal on the condition variable
 			std::unique_lock<std::mutex> lock(this->audio_buffer_queue_mutex);
-			this->audio_buffer_queue_cv.wait_for(lock, std::chrono::milliseconds(100), [this] {
-				return !this->audio_buffer_queue.empty() || this->stop_requested;
-			});
+			this->audio_buffer_queue_cv.wait_for(
+				lock, std::chrono::milliseconds(100), [this] {
+					return !this->audio_buffer_queue.empty() ||
+					       this->stop_requested;
+				});
 			// if we're stopping, break out of the loop
 			if (this->stop_requested) {
 				obs_log(LOG_INFO, "AWS Provider Stream stop requested.");

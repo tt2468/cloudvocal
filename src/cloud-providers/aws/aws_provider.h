@@ -16,7 +16,7 @@ class TranscribeStreamingServiceClient;
 namespace Model {
 class StartStreamTranscriptionRequest;
 class StartStreamTranscriptionHandler;
-}
+} // namespace Model
 } // namespace TranscribeStreamingService
 } // namespace Aws
 
