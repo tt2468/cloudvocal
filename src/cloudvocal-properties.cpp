@@ -278,12 +278,12 @@ void add_general_group_properties(obs_properties_t *ppts)
 	obs_property_t *transcription_cloud_provider_select_list = obs_properties_add_list(
 		general_group, "transcription_cloud_provider", MT_("transcription_cloud_provider"),
 		OBS_COMBO_TYPE_LIST, OBS_COMBO_FORMAT_STRING);
-	// add the available cloud providers: Clova
+	// add the available cloud providers
 	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Clova"),
 				     "clova");
 	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("Google"),
 				     "google");
-	obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("AWS"), "aws");
+	// obs_property_list_add_string(transcription_cloud_provider_select_list, MT_("AWS"), "aws");
 
 	obs_property_t *subs_output =
 		obs_properties_add_list(general_group, "subtitle_sources", MT_("subtitle_sources"),
