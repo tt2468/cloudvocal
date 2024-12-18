@@ -66,8 +66,11 @@ target_sources(
           src/cloud-providers/clova/clova-provider.cpp
           src/cloud-providers/google/google-provider.cpp
           src/cloud-providers/revai/revai-provider.cpp
+          src/utils/ssl-utils.cpp
+          src/utils/curl-helper.cpp
           src/timed-metadata/timed-metadata-utils.cpp)
 
 add_subdirectory(src/cloud-translation)
+add_subdirectory(src/cloud-providers/aws)
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})

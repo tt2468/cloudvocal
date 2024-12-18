@@ -60,7 +60,7 @@ runs:
       run: |
         Write-Host "::group::Build Windows Dependencies"
         conan profile detect --force
-        conan install ${{github.workspace}}/conanfile_win.txt --output-folder=${{github.workspace}}/build_conan --build=missing -g CMakeDeps
+        conan install ${{github.workspace}} --output-folder=${{github.workspace}}/build_conan --build=missing -g CMakeDeps
         Write-Host "::endgroup::"
 
     - name: Run macOS Build

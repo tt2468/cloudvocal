@@ -225,15 +225,21 @@ void cloudvocal_update(void *data, obs_data_t *s)
 		obs_data_get_string(s, "transcription_cloud_provider_api_key");
 	std::string new_cloud_provider_selection =
 		obs_data_get_string(s, "transcription_cloud_provider");
+	std::string new_cloud_provider_secret_key =
+		obs_data_get_string(s, "transcription_cloud_provider_secret_key");
 
 	if (gf->cloud_provider_selection != new_cloud_provider_selection ||
 	    gf->language != new_language ||
-	    gf->cloud_provider_api_key != new_cloud_provider_api_key) {
+	    gf->cloud_provider_api_key != new_cloud_provider_api_key ||
+	    gf->cloud_provider_secret_key != new_cloud_provider_secret_key) {
 		// cloud provider selection or api key changed
-		obs_log(gf->log_level, "cloud provider selection or api key changed");
+		obs_log(gf->log_level, "cloud provider selection, language or keys changed");
 		gf->cloud_provider_selection = new_cloud_provider_selection;
 		gf->language = new_language;
 		gf->cloud_provider_api_key = new_cloud_provider_api_key;
+		gf->cloud_provider_secret_key = new_cloud_provider_secret_key;
+
+		// restart the cloud provider
 		restart_cloud_provider(gf);
 	}
 

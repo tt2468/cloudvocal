@@ -1,5 +1,5 @@
 #include "google-cloud.h"
-#include "curl-helper.h"
+#include "utils/curl-helper.h"
 #include <nlohmann/json.hpp>
 #include <sstream>
 
@@ -7,7 +7,9 @@ using json = nlohmann::json;
 
 GoogleTranslator::GoogleTranslator(const std::string &api_key)
 	: api_key_(api_key),
-	  curl_helper_(std::make_unique<CurlHelper>())
+	  curl_helper_(std::make_unique<CurlHelper>()),
+	  target_lang("en"),
+	  url("")
 {
 }
 
@@ -26,18 +28,22 @@ std::string GoogleTranslator::translate(const std::string &text, const std::stri
 	std::string response;
 
 	try {
-		// Construct URL with parameters
-		std::stringstream url;
-		url << "https://translation.googleapis.com/language/translate/v2"
-		    << "?key=" << api_key_ << "&q=" << CurlHelper::urlEncode(curl.get(), text)
-		    << "&target=" << sanitize_language_code(target_lang);
+		if (this->url.empty() || this->target_lang != target_lang) {
+			// Construct URL with parameters
+			this->url = "https://translation.googleapis.com/language/translate/v2";
+			this->url += "?key=" + api_key_;
+			this->url += "&q=" + CurlHelper::urlEncode(text);
+			this->url += "&target=" + sanitize_language_code(target_lang);
 
-		if (source_lang != "auto") {
-			url << "&source=" << sanitize_language_code(source_lang);
+			if (source_lang != "auto") {
+				this->url += "&source=" + sanitize_language_code(source_lang);
+			}
+
+			this->target_lang = target_lang;
 		}
 
 		// Set up curl options
-		curl_easy_setopt(curl.get(), CURLOPT_URL, url.str().c_str());
+		curl_easy_setopt(curl.get(), CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, CurlHelper::WriteCallback);
 		curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &response);
 		curl_easy_setopt(curl.get(), CURLOPT_SSL_VERIFYPEER, 1L);

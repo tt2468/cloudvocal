@@ -4,7 +4,6 @@ target_sources(
   PRIVATE # ${CMAKE_CURRENT_SOURCE_DIR}/aws.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/azure.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/claude.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/curl-helper.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/custom-api.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/deepl.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/google-cloud.cpp

@@ -12,6 +12,4 @@ void send_timed_metadata_to_server(struct cloudvocal_data *gf, Translation_Mode 
 				   const std::string &source_text, const std::string &source_lang,
 				   const std::string &target_text, const std::string &target_lang);
 
-void init_openssl();
-
 #endif // TIMED_METADATA_UTILS_H

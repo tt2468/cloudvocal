@@ -29,7 +29,6 @@ public:
 
 	void start()
 	{
-		running = true;
 		stop_requested = false;
 		transcription_thread = std::thread(&CloudProvider::processAudio, this);
 		if (needs_results_thread) {
@@ -39,12 +38,15 @@ public:
 
 	void stop()
 	{
+		obs_log(gf->log_level, "Stopping cloud provider");
 		stop_requested = true;
 		gf->input_buffers_cv.notify_all();
 		if (transcription_thread.joinable()) {
+			obs_log(gf->log_level, "Joining transcription thread...");
 			transcription_thread.join();
 		}
 		if (results_thread.joinable()) {
+			obs_log(gf->log_level, "Joining results thread...");
 			results_thread.join();
 		}
 		running = false;
@@ -65,6 +67,8 @@ protected:
 			running = false;
 			return;
 		}
+
+		running = true;
 
 		uint64_t start_timestamp_offset_ns = 0;
 		uint64_t end_timestamp_offset_ns = 0;

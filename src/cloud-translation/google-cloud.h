@@ -17,4 +17,6 @@ private:
 
 	std::string api_key_;
 	std::unique_ptr<CurlHelper> curl_helper_;
+	std::string target_lang;
+	std::string url;
 };
