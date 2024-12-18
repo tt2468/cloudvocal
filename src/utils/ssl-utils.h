@@ -7,3 +7,5 @@ std::string hmacSha256(const std::string &key, const std::string &data, bool isH
 std::string sha256(const std::string &data);
 std::string getCurrentTimestamp();
 std::string getCurrentDate();
+std::string PEMrootCerts();
+std::string PEMrootCertsPath();

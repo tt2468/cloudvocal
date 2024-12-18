@@ -102,7 +102,7 @@ Build the plugin:
 If you're developing the plugin, I find this command to be useful for direct deploymet into OBS after building:
 
 ```powershell
-> .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
+> pwsh -ExecutionPolicy Bypass -File .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
 ```
 
 ### Other Plugins

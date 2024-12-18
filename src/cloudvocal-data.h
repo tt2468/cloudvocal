@@ -83,6 +83,7 @@ struct cloudvocal_data {
 	std::shared_ptr<CloudProvider> cloud_provider;
 	std::string cloud_provider_selection;
 	std::string cloud_provider_api_key;
+	std::string cloud_provider_secret_key;
 
 	std::map<std::string, std::string> filter_words_replace;
 

@@ -1,7 +1,7 @@
 
 #include "plugin-support.h"
 #include "timed-metadata-utils.h"
-#include "ssl-utils/ssl-utils.h"
+#include "utils/ssl-utils.h"
 
 #include <openssl/evp.h>
 #include <openssl/sha.h>
@@ -34,6 +34,9 @@ void send_timed_metadata_to_ivs_endpoint(struct cloudvocal_data *gf, Translation
 					 const std::string &target_text,
 					 const std::string &target_lang)
 {
+	if (!gf->active || !gf->send_timed_metadata) {
+		return;
+	}
 	// below 4 should be from a configuration
 	std::string AWS_ACCESS_KEY = gf->timed_metadata_config.aws_access_key;
 	std::string AWS_SECRET_KEY = gf->timed_metadata_config.aws_secret_key;

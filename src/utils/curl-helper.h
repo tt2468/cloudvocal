@@ -3,7 +3,6 @@
 #include <mutex>
 
 #include <curl/curl.h>
-#include "ITranslator.h"
 
 class CurlHelper {
 public:
@@ -14,7 +13,7 @@ public:
 	static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 	// URL encode a string
-	static std::string urlEncode(CURL *curl, const std::string &value);
+	static std::string urlEncode(const std::string &value);
 
 	// Common request builders
 	static struct curl_slist *

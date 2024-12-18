@@ -1,5 +1,6 @@
 #include "google-provider.h"
 #include "language-codes/language-codes.h"
+#include "utils/ssl-utils.h"
 
 using namespace google::cloud::speech::v1;
 
@@ -8,6 +9,8 @@ bool GoogleProvider::init()
 	initialized = false;
 
 	grpc::SslCredentialsOptions ssl_opts;
+	ssl_opts.pem_root_certs = PEMrootCerts();
+
 	this->channel =
 		grpc::CreateChannel("speech.googleapis.com", grpc::SslCredentials(ssl_opts));
 	this->stub = Speech::NewStub(channel);
