@@ -26,7 +26,8 @@ list(
   ${abseil_LIBS_RELEASE}
   ${protobuf_LIBS_RELEASE}
   ${ZLIB_LIBRARIES}
-  ${openssl_LIBS_RELEASE} openssl::openssl
+  ${openssl_LIBS_RELEASE}
+  openssl::openssl
   ${c-ares_LIBS_RELEASE}
   ${re2_LIBS_RELEASE}
   ${boost_Boost_url_LIBS_RELEASE}
@@ -43,9 +44,31 @@ list(
   ${aws-checksums_LIBS_RELEASE}
   ${aws-crt-cpp_LIBS_RELEASE}
   ${aws-sdk-cpp_LIBS_RELEASE}
-  ${bzip2_LIBS_RELEASE}
-  userenv advapi32 ws2_32 crypt32 bcrypt winhttp shlwapi wininet secur32 iphlpapi netapi32 rpcrt4 shell32 version ncrypt
-  )
+  ${bzip2_LIBS_RELEASE})
+if(WIN32)
+  list(
+    APPEND
+    DEPS_LIBRARIES
+    userenv
+    advapi32
+    ws2_32
+    crypt32
+    bcrypt
+    winhttp
+    shlwapi
+    wininet
+    secur32
+    iphlpapi
+    netapi32
+    rpcrt4
+    shell32
+    version
+    ncrypt)
+endif()
+if(APPLE)
+  list(APPEND DEPS_LIBRARIES resolv)
+endif()
+
 list(
   APPEND
   DEPS_LIB_DIRS
@@ -70,8 +93,7 @@ list(
   ${aws-checksums_LIB_DIRS_RELEASE}
   ${aws-crt-cpp_LIB_DIRS_RELEASE}
   ${aws-sdk-cpp_LIB_DIRS_RELEASE}
-  ${bzip2_LIB_DIRS_RELEASE}
-  )
+  ${bzip2_LIB_DIRS_RELEASE})
 list(
   APPEND
   DEPS_INCLUDE_DIRS
@@ -96,8 +118,7 @@ list(
   ${aws-checksums_INCLUDE_DIRS_RELEASE}
   ${aws-crt-cpp_INCLUDE_DIRS_RELEASE}
   ${aws-sdk-cpp_INCLUDE_DIRS_RELEASE}
-  ${bzip2_INCLUDE_DIRS_RELEASE}
-  )
+  ${bzip2_INCLUDE_DIRS_RELEASE})
 
 message(STATUS "Dependencies include directories: ${DEPS_INCLUDE_DIRS}")
 message(STATUS "Dependencies library directories: ${DEPS_LIB_DIRS}")

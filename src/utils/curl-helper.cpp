@@ -10,7 +10,7 @@ CurlHelper::CurlHelper()
 	std::lock_guard<std::mutex> lock(curl_mutex_);
 	if (!is_initialized_) {
 		if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
-			throw std::exception("Failed to initialize CURL");
+			throw std::runtime_error("Failed to initialize CURL");
 		}
 		is_initialized_ = true;
 	}
@@ -47,7 +47,7 @@ std::string CurlHelper::urlEncode(const std::string &value)
 		curl_easy_escape(curl.get(), value.c_str(), (int)value.length()), curl_free);
 
 	if (!escaped) {
-		throw std::exception("Failed to URL encode string");
+		throw std::runtime_error("Failed to URL encode string");
 	}
 
 	return std::string(escaped.get());
@@ -61,7 +61,7 @@ struct curl_slist *CurlHelper::createBasicHeaders(const std::string &content_typ
 		headers = curl_slist_append(headers, ("Content-Type: " + content_type).c_str());
 
 		if (!headers) {
-			throw std::exception("Failed to create HTTP headers");
+			throw std::runtime_error("Failed to create HTTP headers");
 		}
 
 		return headers;
@@ -76,7 +76,7 @@ struct curl_slist *CurlHelper::createBasicHeaders(const std::string &content_typ
 void CurlHelper::setSSLVerification(CURL *curl, bool verify)
 {
 	if (!curl) {
-		throw std::exception("Invalid CURL handle for SSL configuration");
+		throw std::runtime_error("Invalid CURL handle for SSL configuration");
 	}
 
 	long verify_peer = verify ? 1L : 0L;
