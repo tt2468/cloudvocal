@@ -35,8 +35,8 @@ set(_obs_clang_c_options
     -Winfinite-recursion
     -Wint-conversion
     -Wno-conversion
-    -Wno-float-conversion
     -Wno-error=newline-eof
+    -Wno-float-conversion
     -Wno-implicit-fallthrough
     -Wno-missing-braces
     -Wno-missing-field-initializers
