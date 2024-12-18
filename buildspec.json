@@ -38,11 +38,11 @@
     },
     "name": "cloudvocal",
     "displayName": "Realtime Professional-Grade Cloud Transcription and Translation Plugin",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Roy Shilkrot",
-    "website": "https://locaal.ai",
+    "website": "https://github.com/locaal-ai/cloudvocal",
     "email": "roy@locaal.ai",
     "uuids": {
-        "windowsApp": "00000000-0000-0000-0000-000000000000"
+        "windowsApp": "EC013006-E8B6-4A17-B6E5-C8DC66853231"
     }
 }
