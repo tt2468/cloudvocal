@@ -279,6 +279,14 @@ jobs:
           "pluginName=${ProductName}" >> $env:GITHUB_OUTPUT
           "pluginVersion=${ProductVersion}" >> $env:GITHUB_OUTPUT
 
+      - uses: actions/cache@v4
+        id: conan-cache
+        with:
+          path: C:\Users\runneradmin\.conan2\
+          key: ${{ runner.os }}-conan-cache-${{ needs.check-event.outputs.config }}
+          restore-keys: |
+            ${{ runner.os }}-conan-cache-
+
       - name: Build Plugin 🧱
         uses: ./.github/actions/build-plugin
         with:
