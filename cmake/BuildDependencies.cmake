@@ -25,7 +25,6 @@ list(
   ${grpc_LIBS_RELEASE}
   ${abseil_LIBS_RELEASE}
   ${protobuf_LIBS_RELEASE}
-  ${ZLIB_LIBRARIES}
   ${openssl_LIBS_RELEASE}
   openssl::openssl
   ${c-ares_LIBS_RELEASE}
@@ -64,6 +63,8 @@ if(WIN32)
     shell32
     version
     ncrypt)
+else()
+  list(APPEND DEPS_LIBRARIES ${ZLIB_LIBRARIES})
 endif()
 if(APPLE)
   list(APPEND DEPS_LIBRARIES resolv)
