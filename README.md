@@ -19,24 +19,23 @@ Download:</br>
 
 CloudVocal brings professional-grade cloud transcription and translation to your OBS streams and recordings. Powered by industry-leading cloud providers, it delivers exceptional accuracy and real-time performance for your live streaming needs. ✅ Professional-grade accuracy, ✅ support for 100+ languages, ✅ enterprise-level reliability, and ✅ blazing-fast performance!
 
-If this plugin has been valuable consider adding a ⭐ to this GH repo, rating it [on OBS](https://obsproject.com/forum/resources/authors/royshilkrot.319842/), subscribing to [my YouTube channel](https://www.youtube.com/@royshilk) where I post updates, and supporting my work on [GitHub](https://github.com/sponsors/royshil), [Patreon](https://www.patreon.com/RoyShilkrot) 🙏
-
 CloudVocal integrates seamlessly with leading cloud providers to deliver enterprise-grade speech recognition and translation services. Simply configure your API credentials and start streaming with professional-quality captions and translations.
 
 ## Features
 
 Current Features:
 - Professional-grade transcription with industry-leading accuracy
+- Providers: [Google Cloud](https://cloud.google.com/speech-to-text/docs/), [Naver Clova](https://developers.naver.com/docs/clova/api/), [Rev AI](https://www.rev.ai/), [Deepgram](https://developers.deepgram.com/docs/introduction), [AWS Transcribe](https://docs.aws.amazon.com/transcribe/latest/APIReference/Welcome.html) (upcoming)
 - Real-time translation using enterprise cloud translation services
-- Support for 100+ languages with dialect recognition
+- Translation providers: [Google Cloud](https://cloud.google.com/translate/docs/reference/rest/), [Naver Papago](https://developers.naver.com/docs/papago/), [DeepL](https://www.deepl.com/en/products/api), [AWS Translate](https://aws.amazon.com/translate/), [Anthropic Claude](https://www.anthropic.com/api), [OpenAI](https://openai.com/api/)
 - Streaming-optimized performance with minimal latency
-- Multiple cloud provider options for transcription and translation
 - Caption output in multiple formats (.txt, .srt)
 - Sync'ed captions with OBS recording timestamps
 - Direct streaming to platforms (YouTube, Twitch) with embedded captions
 - Partial transcriptions for a streaming-captions experience
 
 Roadmap:
+- Additional cloud providers and services (e.g. Microsoft Azure)
 - Custom vocabulary and pronunciation support
 - Professional terminology handling for specific industries
 - Advanced text filtering and customization options
@@ -74,12 +73,23 @@ $ conan install . --output-folder=./build_conan --build=missing -g CMakeDeps
 
 ### Mac OSX
 
+Build the plugin:
+
 ```sh
 $ ./.github/scripts/build-macos --config Release
 ```
 
+You may want to change to `RelWithDebInfo` for a debug build.
+
+If you're developing the plugin, I find this command to be useful for direct deploymet into OBS after building:
+
+```sh
+$ ./.github/scripts/build-macos --skip-deps && cp -R release/RelWithDebInfo/*.plugin ~/Library/Application\ Support/obs-studio/plugins/
+```
+
 ### Linux
 
+Build the plugin:
 ```sh
 $ ./.github/scripts/build-linux
 ```
@@ -90,7 +100,7 @@ Windows also needs Conan for OpenSSL. Run `conan` to get the dependency (make su
 ```powershell
 > pip install conan
 > conan profile detect --force
-> conan install .\conanfile_win.txt --output-folder=./build_conan --build=missing -g CMakeDeps 
+> conan install .\conanfile_win.txt --output-folder=./build_conan --build=missing -g CMakeDeps
 ```
 
 Build the plugin:
@@ -105,12 +115,11 @@ If you're developing the plugin, I find this command to be useful for direct dep
 > pwsh -ExecutionPolicy Bypass -File .\.github\scripts\Build-Windows.ps1 -Configuration RelWithDebInfo -SkipDeps && Copy-Item -Force -Recurse .\release\RelWithDebInfo\* "C:\Program Files\obs-studio\"
 ```
 
-### Other Plugins
+## Contributing
 
-Check out our other plugins:
-- [LocalVocal](https://github.com/locaal-ai/obs-localvocal) for on-device real-time transcription and translation
-- [Background Removal](https://github.com/locaal-ai/obs-backgroundremoval) for removing background from live portrait video
-- [Detect](https://github.com/locaal-ai/obs-detect) for real-time on-device object detection
-- [CleanStream](https://github.com/locaal-ai/obs-cleanstream) for real-time profanity filter
-- [URL/API Source](https://github.com/locaal-ai/obs-urlsource) for real-time data integrations
-- [Squawk](https://github.com/locaal-ai/obs-squawk) for real-time on-device speech generation (text-to-speech)
+We welcome contributions from the community!
+Please fork the repository and submit a pull request with your changes. We will review and merge your changes as soon as possible.
+
+## License
+
+This project is licensed under the GPLv2 License - see the [LICENSE](LICENSE) file for details.
