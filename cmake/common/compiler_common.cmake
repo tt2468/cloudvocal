@@ -22,7 +22,6 @@ set(_obs_clang_c_options
     # cmake-format: sortable
     -fno-strict-aliasing
     -Wbool-conversion
-    -Wcomma
     -Wconstant-conversion
     -Wdeprecated-declarations
     -Wempty-body
