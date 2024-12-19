@@ -172,8 +172,8 @@ void RevAIProvider::readResultsFromTranscription()
 
 		if (send_result) {
 			result.language = language_codes_from_underscore[gf->language];
-			result.start_timestamp_ms = response.ts;
-			result.end_timestamp_ms = response.end_ts;
+			result.start_timestamp_ms = (uint64_t)response.ts;
+			result.end_timestamp_ms = (uint64_t)response.end_ts;
 			this->transcription_callback(result);
 		}
 
