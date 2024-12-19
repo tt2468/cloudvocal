@@ -5,7 +5,7 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/build_conan)
 find_package(gRPC CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
-find_package(ZLIB REQUIRED)
+find_package(ZLIB CONFIG REQUIRED PATHS ${CMAKE_SOURCE_DIR}/build_conan NO_DEFAULT_PATH)
 find_package(OpenSSL CONFIG REQUIRED)
 find_package(c-ares CONFIG REQUIRED)
 find_package(re2 CONFIG REQUIRED)
@@ -26,7 +26,7 @@ list(
   ${abseil_LIBS_RELEASE}
   ${protobuf_LIBS_RELEASE}
   ${openssl_LIBS_RELEASE}
-  ${ZLIB_LIBRARIES}
+  ${zlib_LIBS_RELEASE}
   openssl::openssl
   ${c-ares_LIBS_RELEASE}
   ${re2_LIBS_RELEASE}
@@ -101,7 +101,7 @@ list(
   ${gRPC_INCLUDE_DIRS}
   ${absl_INCLUDE_DIRS}
   ${protobuf_INCLUDE_DIRS_RELEASE}
-  ${ZLIB_INCLUDE_DIRS}
+  ${zlib_INCLUDE_DIRS_RELEASE}
   ${openssl_INCLUDE_DIRS_RELEASE}
   ${c-ares_INCLUDE_DIRS}
   ${re2_INCLUDE_DIRS}
