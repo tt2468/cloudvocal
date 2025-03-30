@@ -178,7 +178,7 @@ jobs:
     name: Build for Ubuntu 🐧
     runs-on: ubuntu-22.04
     needs: check-event
-    if: false
+    if: true
     defaults:
       run:
         shell: bash
