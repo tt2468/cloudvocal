@@ -2,7 +2,8 @@
 #define NOMINMAX
 #endif
 
-#include <obs.h>
+#include <obs.hpp>
+#include <obs-websocket-api.h>
 
 #include <curl/curl.h>
 
@@ -177,8 +178,8 @@ void send_translated_sentence_to_file(struct cloudvocal_data *gf,
 void send_caption_to_stream(DetectionResultWithText result, const std::string &str_copy,
 			    struct cloudvocal_data *gf)
 {
-	obs_output_t *streaming_output = obs_frontend_get_streaming_output();
-	if (streaming_output) {
+	//obs_output_t *streaming_output = obs_frontend_get_streaming_output();
+	//if (streaming_output) {
 		// calculate the duration in seconds
 		const double duration =
 			(double)(result.end_timestamp_ms - result.start_timestamp_ms) / 1000.0;
@@ -188,10 +189,19 @@ void send_caption_to_stream(DetectionResultWithText result, const std::string &s
 			"Sending caption to streaming output: %s (raw duration %.3f, effective duration %.3f)",
 			str_copy.c_str(), duration, effective_duration);
 		// TODO: find out why setting short duration does not work
-		obs_output_output_caption_text2(streaming_output, str_copy.c_str(),
-						effective_duration);
-		obs_output_release(streaming_output);
-	}
+	//	obs_output_output_caption_text2(streaming_output, str_copy.c_str(),
+	//					effective_duration);
+	//	obs_output_release(streaming_output);
+	//}
+	OBSDataAutoRelease requestData = obs_data_create();
+	obs_data_set_string(requestData, "vendorName", "irltk_multi_destination");
+	obs_data_set_string(requestData, "requestType", "output_stream_caption");
+	OBSDataAutoRelease subData = obs_data_create();
+	obs_data_set_string(subData, "text", str_copy.c_str());
+	obs_data_set_double(subData, "duration", effective_duration);
+	obs_data_set_obj(requestData, "requestData", subData);
+	struct obs_websocket_request_response *response = obs_websocket_call_request("VendorRequest", requestData);
+	obs_websocket_request_response_free(response);
 }
 
 void set_text_callback(struct cloudvocal_data *gf, const DetectionResultWithText &resultIn)
