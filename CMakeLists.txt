@@ -14,6 +14,7 @@ include(helpers)
 add_library(${CMAKE_PROJECT_NAME} MODULE)
 
 find_package(libobs REQUIRED)
+find_package(obs-websocket-api)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::libobs OBS::websocket-api)
 
 if(ENABLE_FRONTEND_API)
